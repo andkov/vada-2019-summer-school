@@ -20,11 +20,17 @@ library(ggplot2)
 library(ggpubr)
 library(readxl)
 # ---- declare-globals ---------------------------------------------------------
-# path_file_input       <- "./data-unshared/raw/GLS targeted areas _Final.xlsx"
-# path_file_input       <- "./data-unshared/raw/GLS-roster-2019-05-10.xlsx"
-path_file_input       <- "./data-unshared/raw/GLS-roster-2019-05-10.xlsx"
+path_folder <- "./data-unshared/raw/"
+path_input_files <- list.files(path_folder,".xlsx")
 
 # ---- load-data ---------------------------------------------------------------
+
+ls_input <- c(
+  ""
+)
+
+
+
 # source 1 : Data from Nebraska dept of Corrections
 # create a list of data sets
 ls_ds <- list(
