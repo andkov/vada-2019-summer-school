@@ -1,15 +1,42 @@
 # vada-2019-summer-school
 A repository to accompany select applied sessions during VADA summer school of June 2019.
 
+Table of Content
 
+# 0 Abstracts
 ## Techniques for Reproducible Visualisation in R: Graph as a Sequence of Three Functions.   
 Date : _2019-06-12-Wednesday_  
 Time : _13:00 - 15:00_  
 
-The session demonstrates a technique for organizing workflows that generate reproducible data visualisations. Rarely do applied data science projects produce any given graph only once.The need to generate plots of the same form using different inputs, different options, and in multiple contexts requires the analyst to structure the operations involved in graph production as customizable functions. The technique demonstrated in this session divides the production of data visualizations into three sections, each governed by a dedicated function. The first function prepares the data for graphing, the second produces the graphic, and the third prints the image to disk. This applied session will walk the learner through the stages of developing such a chain of functions and demonstrate the advantages of such an approach in reproducible projects. Data and starter scripts will be provided. Software in focus: RStudio, R, specifically ggplot2 package. For updates and additional information see https://github.com/andkov/vada-2019-summer-school.
+The session demonstrates a technique for organizing workflows that generate reproducible data visualisations. Rarely do applied data science projects produce any given graph only once.The need to generate plots of the same form using different inputs, different options, and in multiple contexts requires the analyst to structure the operations involved in graph production as customizable functions. The technique demonstrated in this session divides the production of data visualizations into three sections ( prep - plot - print ), each governed by a dedicated custom function. The first function prepares the data for graphing, the second plots the graphic, and the third prints the image to disk. This applied session will walk the learner through the stages of developing such a chain of functions and demonstrate the advantages of such an approach in reproducible projects. Data and starter scripts will be provided. 
+Software in focus: RStudio, R, specifically _dplyr_ and _ggplot2_ packages. 
 
-## Using github for data science:  version control, project management,promotion  
+## Using github for data science: version control, project management, promotion  
 Date: _2019-06-13-Thursday_  
 Time: _8:30 - 10:30_  
 
-The sessions offers a hands-on walk through a minimalistic project designed to introduce the learner to basic operational utility of git and github in data science projects. While git(hub) is best known for providing version control and streamlining collaboration in software development, its applications in data analytic projects can enhance the robustness of the produced solutions and help make results more visible and accessible to the community. The topics to be covered include: 1) project kickoff from a standard stencil (https://github.com/wibeasley/RAnalysisSkeleton ),  2) using Github client for version control 3) using Github Issues for structuring tasks in project development 3) team control and communication and 4) designing an effective README page that faces the public. Data and starter scripts will be provided. Software in focus: R, RStudio, github client. For updates and additional information see https://github.com/andkov/vada-2019-summer-school.
+The sessions offers a hands-on walk through a minimalistic project designed to introduce the learner to basic operational utility of git and github in data science projects. While git(hub) is best known for providing version control and streamlining collaboration in software development, its applications in data analytic projects can enhance the robustness of the produced solutions and help make results more visible and accessible to the community. The topics to be covered include: 1) project kickoff from a standard stencil (https://github.com/wibeasley/RAnalysisSkeleton ),  2) using Github client for version control 3) using Github Issues for structuring tasks in project development 3) team control and communication and 4) designing an effective README page that faces the public. Data and starter scripts will be provided. Software in focus: R, RStudio, github client. 
+
+# 1. How to reproduce
+To prepare the environment for our project, please follow the "required" section of the  [Installation Resources](https://github.com/OuhscBbmc/RedcapExamplesAndPatterns/blob/master/DocumentationGlobal/ResourcesInstallation.md) of the [Biomedical and Behavioral Methodology Core](https://ouhsc.edu/bbmc/) (BBMC) at the Oklahoma University Health Sciences Center (OUHSC). 
+
+```r
+if( !base::requireNamespace("devtools") ) utils::install.packages("devtools")
+devtools::source_gist("2c5e7459b88ec28b9e8fa0c695b15ee3", filename="package-janitor-bbmc.R")
+package_janitor_remote(
+"https://raw.githubusercontent.com/OuhscBbmc/RedcapExamplesAndPatterns/master/utility/package-dependency-list.csv"
+)
+```
+
+# 2. Resources 
+
+The data science lead of BBMC is [Will Beasley](https://github.com/wibeasley), my old friend from graduate school, whose ideas about data visualization, reproducible research and applied analytics continue to shape my practice. We will operate in the framework he developed: [RAnalysisSkeleton](https://github.com/wibeasley/ranalysisskeleton), my starting point for any data science project. Our `2019-06-13` session will focus on applying this template to publish on GitHub the results of our `2019-06-12` session on reproducible graphing.   
+
+Please study the examples of _ggplot_ graphs Will Beasley developed to illustrate this [textbook for introductory statistics](https://github.com/OuhscBbmc/DeSheaToothakerIntroStats/blob/master/thumbnails/thumbnails.md). Specifically, pay attention to the organization of the script in the _ggplot_ specification. Notice typing conventions, the order of lines, and indentations. 
+
+# Quick Links
+- [Installation Resources](https://github.com/OuhscBbmc/RedcapExamplesAndPatterns/blob/master/DocumentationGlobal/ResourcesInstallation.md)
+- [RAnalysisSkeleton](https://github.com/wibeasley/ranalysisskeleton)
+- [Textbook for introductory statistics](https://github.com/OuhscBbmc/DeSheaToothakerIntroStats/blob/master/thumbnails/thumbnails.md)
+- [Data Science Practices Style Guide](https://ouhscbbmc.github.io/data-science-practices-1/style-guide.htm)
+
