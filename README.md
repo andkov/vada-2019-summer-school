@@ -16,7 +16,7 @@ Time: _8:30 - 10:30_
 
 The sessions offers a hands-on walk through a minimalistic project designed to introduce the learner to basic operational utility of git and github in data science projects. While git(hub) is best known for providing version control and streamlining collaboration in software development, its applications in data analytic projects can enhance the robustness of the produced solutions and help make results more visible and accessible to the community. The topics to be covered include: 1) project kickoff from a standard stencil (https://github.com/wibeasley/RAnalysisSkeleton ),  2) using Github client for version control 3) using Github Issues for structuring tasks in project development 3) team control and communication and 4) designing an effective README page that faces the public. Data and starter scripts will be provided. Software in focus: R, RStudio, github client. 
 
-# 2. Getting ready for sessions
+# Getting ready for sessions
 
 To prepare the environment for our sessions, please follow the "required" section of the  [Installation Resources](https://github.com/OuhscBbmc/RedcapExamplesAndPatterns/blob/master/DocumentationGlobal/ResourcesInstallation.md) of the [Biomedical and Behavioral Methodology Core](https://ouhsc.edu/bbmc/) (BBMC) at the Oklahoma University Health Sciences Center (OUHSC). 
 
