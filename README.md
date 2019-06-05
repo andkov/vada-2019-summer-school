@@ -2,6 +2,10 @@
 
 A repository to accompany selected applied sessions of the [2019 VADA Program Summer School](http://vada.cs.umanitoba.ca/program/program/summer-school/summer-school-2019/), June 10-14, at the George and Fay Yee Centre for Healthcare Innovation, Winnipeg, Manitoba. [Full program](libs/materials/Full-Week-Schedule-and-Descriptions.pdf) 
 
+# Analytic Products
+ - [0-greeter][greeter] - organize the input data sources
+ - [EDA-1][eda_1] - initial data explorations
+
 
 ## Techniques for Reproducible Visualisation in R: Graph as a Sequence of Three Functions.   
 Date : _2019-06-12-Wednesday_  
