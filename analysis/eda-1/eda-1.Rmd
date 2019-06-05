@@ -1,0 +1,148 @@
+---
+title: "GLS Activity Report"
+output:
+  html_document:
+    always_allow_html: yes
+    df_print: kable
+    highlight: tango
+    keep_md: yes
+    theme: spacelab
+    toc: yes
+    toc_float: yes
+  pdf_document: 
+    highlight: pygments
+    toc: yes
+---
+
+<!-- These two chunks should be added in the beginning of every .Rmd that you want to source an .R script -->
+<!--  The 1st mandatory chunck  -->
+<!--  Set the working directory to the repository's base directory -->
+```{r, echo=F, message=F} 
+#Don't combine this call with any other chunk 
+# cat("Working directory: ", getwd()) # check where you are
+  library(knitr)
+# Rmd is in "./reports/reportA/reportA.Rmd", but now the root is "./"
+  knitr::opts_knit$set(root.dir='../../') 
+```
+
+<!--  The 2nd mandatory chunck  -->
+<!-- Set the report-wide options, and point to the external code file. -->
+```{r set_options, echo=F}
+# set options shared by all chunks
+report_render_start_time <- Sys.time()
+opts_chunk$set(
+  results='show', 
+  message = TRUE,
+  comment = NA, 
+  tidy = FALSE,
+  fig.height = 7, 
+  fig.width = 12, 
+  out.width = "900px",
+  fig.path = 'figure_rmd/',     
+  dev = "png",
+  dpi = 400
+  # fig.path = 'figure_pdf/',     
+  # dev = "pdf"#,
+  # dev.args=list(pdf = list(colormodel = 'cmyk'))
+)
+echoChunks <- TRUE
+options(width=120) #So the output is 50% wider than the default.
+# connect to the file with the underlying R script  
+read_chunk("./analysis/gls-activity/gls-activity.R") 
+```
+
+
+# I. Exposition 
+
+Some text here
+<!-- Load 'sourced' R files.  Suppress the output when loading packages. --> 
+```{r load-packages, echo=echoChunks, message=FALSE}
+```
+
+
+<!-- Load the sources.  Suppress the output when loading sources. --> 
+```{r load-sources, echo=echoChunks, message=FALSE}
+```
+
+
+<!-- Load any Global functions and variables declared in the R file.  Suppress the output. --> 
+```{r declare-globals, echo=echoChunks, results='show', message=FALSE}
+```
+
+<!-- Declare any global functions specific to a Rmd output.  Suppress the output. --> 
+```{r, echo=echoChunks, message=FALSE}
+#Put code in here.  It doesn't call a chunk in the codebehind file.
+```
+
+## I.A. Data
+<!-- Load the datasets.   -->
+```{r load-data, echo=echoChunks, results='show', message=FALSE}
+```
+
+<!-- Inspect the datasets.   -->
+```{r inspect-data, echo=echoChunks, results='show', message=FALSE}
+```
+
+<!-- Tweak the datasets.   -->
+```{r tweak-data, echo=echoChunks, results='show', message=FALSE}
+```
+
+
+
+<!-- Basic table view.   -->
+```{r basic-table, echo=TRUE, results='show', message=FALSE}
+```
+
+<!-- Basic graph view.   -->
+```{r basic-graph, echo=TRUE, results='show', message=FALSE}
+```
+
+
+```{r save-to-disk, echo=TRUE, results='show', message=FALSE}
+```
+
+
+# II. Development
+
+## 1
+```{r explore-1, echo=TRUE, results='show', message=FALSE}
+```
+
+## 2
+
+```{r explore-2, echo=TRUE, results='show', message=FALSE}
+```
+
+## 3
+```{r explore-3, echo=TRUE, results='show', message=FALSE}
+```
+
+## 4
+```{r explore-4, echo=TRUE, results='show', message=FALSE}
+```
+
+
+
+Session Information {#session-info}
+===========================================================================
+
+For the sake of documentation and reproducibility, the current report was rendered in the following environment.  Click the line below to expand.
+
+<details>
+  <summary>Environment <span class="glyphicon glyphicon-plus-sign"></span></summary>
+```{r session-info, echo=FALSE}
+if( requireNamespace("devtools", quietly = TRUE) ) {
+  devtools::session_info()
+} else {
+  sessionInfo()
+}
+```
+</details>
+
+```{r session-duration, echo=FALSE}
+report_render_duration_in_seconds <- round(as.numeric(difftime(Sys.time(), report_render_start_time, units="secs")))
+```
+
+Report rendered by `r Sys.info()["user"]` at `r strftime(Sys.time(), "%Y-%m-%d, %H:%M %z")` in `r report_render_duration_in_seconds` seconds.
+
+
