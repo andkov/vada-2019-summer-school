@@ -1,0 +1,101 @@
+---
+title: "0-greeter-GLS-table"
+output:
+  html_document:
+    always_allow_html: yes
+    df_print: kable
+    highlight: tango
+    keep_md: no
+    theme: spacelab
+    toc: no
+  pdf_document: 
+    highlight: pygments
+    toc: yes
+---
+
+<!-- These two chunks should be added in the beginning of every .Rmd that you want to source an .R script -->
+<!--  The 1st mandatory chunck  -->
+<!--  Set the working directory to the repository's base directory -->
+```{r, echo=F, message=F} 
+#Don't combine this call with any other chunk 
+# cat("Working directory: ", getwd()) # check where you are
+  library(knitr)
+# Rmd is in "./reports/reportA/reportA.Rmd", but now the root is "./"
+  knitr::opts_knit$set(root.dir='../../') 
+```
+
+<!--  The 2nd mandatory chunck  -->
+<!-- Set the report-wide options, and point to the external code file. -->
+```{r set_options, echo=F}
+# set options shared by all chunks
+report_render_start_time <- Sys.time()
+opts_chunk$set(
+  results='show', 
+  message = TRUE,
+  comment = NA, 
+  tidy = FALSE,
+  fig.height = 7, 
+  fig.width = 12, 
+  out.width = "900px",
+  fig.path = 'figure_rmd/',     
+  dev = "png",
+  dpi = 400
+  # fig.path = 'figure_pdf/',     
+  # dev = "pdf"#,
+  # dev.args=list(pdf = list(colormodel = 'cmyk'))
+)
+echoChunks   <- FALSE
+messageChunk <- FALSE
+warningChunk <- FALSE
+resultsChunk <- "hide"
+options(width=120) #So the output is 50% wider than the default.
+# connect to the file with the underlying R script  
+read_chunk("./manipulation/0-greeter-gls.R") 
+```
+
+<!-- Load 'sourced' R files.  Suppress the output when loading packages. --> 
+```{r load-packages, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+<!-- Load the sources.  Suppress the output when loading sources. --> 
+```{r load-sources, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+<!-- Load any Global functions and variables declared in the R file.  Suppress the output. --> 
+```{r declare-globals, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+<!-- Declare any global functions specific to a Rmd output.  Suppress the output. --> 
+```{r, echo=echoChunks, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+<!-- Load the datasets.   -->
+```{r load-data, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+<!-- Inspect the datasets.   -->
+```{r inspect-data, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+<!-- Tweak the datasets.   -->
+```{r tweak-data, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+
+```{r tweak-1, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+
+```{r tweak-2, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+
+```{r tweak-3, echo=echoChunks, results = resultsChunk, message=FALSE, warning = warningChunk}
+```
+
+
+```{r basic-table, echo=echoChunks, results = "show", message=FALSE, warning = warningChunk}
+```
+
+
+
