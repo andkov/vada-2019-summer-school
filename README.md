@@ -4,8 +4,10 @@ A repository to accompany selected applied sessions of the [2019 VADA Program Su
 
 # Analytic Products
  - [0-greeter][greeter] - organize the input data sources
- - [EDA-1][eda_1] - initial data explorations
+ - [technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique
 
+[greeter]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/0-greeter/0-greeter.html
+[demo_complete]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/prep-plot-print/prep-plot-print.html
 
 ## Techniques for Reproducible Visualisation in R: Graph as a Sequence of Three Functions.   
 Date : _2019-06-12-Wednesday_  
