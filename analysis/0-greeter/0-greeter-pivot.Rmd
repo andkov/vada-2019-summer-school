@@ -50,7 +50,7 @@ warningChunk <- FALSE
 resultsChunk <- "hide"
 options(width=120) #So the output is 50% wider than the default.
 # connect to the file with the underlying R script  
-read_chunk("./manipulation/0-greeter-gls.R") 
+read_chunk("./manipulation/0-greeter.R") 
 ```
 
 <!-- Load 'sourced' R files.  Suppress the output when loading packages. --> 
