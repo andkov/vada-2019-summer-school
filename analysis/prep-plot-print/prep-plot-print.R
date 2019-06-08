@@ -35,48 +35,48 @@ dto %>% pryr::object_size(); dto %>% class(); dto %>% names()
 # to select target variables from each source 
 # 1 - Clinical Outcomes at year 1
 var_clinical_outcomes_1y <- c(
-   "atopy_1y"             # Atopy at 1y (by SPT - reaction to any allergen)
-  ,"wz_recurrent_1y"     # Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
-  ,"atopy_1y"            # Atopy at 1y (by SPT - reaction to any allergen)	Binary
-  ,"atopy_food_1y"       # Sensitization to food allergen at 1y by SPT	Binary
-  ,"atopy_nonfood_1y"    # Sensitization to non-food allergen at 1y by SPT	Binary
-  ,"wtclass_1y"          # Weight Class at 1y (based on WFL z-score)	Categorical
-  ,"ow_1y"               # Overweight at 1y (WFL z-score > 97%ile)	Binary
-  ,"owrisk_1y"           # At risk for overweight at 1y (WFL z-score > 85%ile)	Binary
-  ,"rapid_bmigrowth_12m" # >1 SD change in z-score from birth(BMI) to 12m(BMI)	Binary
-  ,"rapid_wflgrowth_12m" # >1 SD change in z-score from birth(WFA) to 12m(WFL)	Binary
-  ,"rapid_wgt_0to12m"    # Change in WHO zwgt >0.67	Binary
-  ,"dzwgt_0to12m"        # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
+   "atopy_1y"            # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
+  ,"wz_recurrent_1y"     # (Bin)  Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
+  ,"atopy_1y"            # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)	Binary
+  ,"atopy_food_1y"       # (Bin)  Sensitization to food allergen at 1y by SPT	Binary
+  ,"atopy_nonfood_1y"    # (Bin)  Sensitization to non-food allergen at 1y by SPT	Binary
+  ,"wtclass_1y"          # (Cat3) Weight Class at 1y (based on WFL z-score)	Categorical
+  ,"ow_1y"               # (Bin)  Overweight at 1y (WFL z-score > 97%ile)	Binary
+  ,"owrisk_1y"           # (Bin)  At risk for overweight at 1y (WFL z-score > 85%ile)	Binary
+  ,"rapid_bmigrowth_12m" # (Bin)  >1 SD change in z-score from birth(BMI) to 12m(BMI)	Binary
+  ,"rapid_wflgrowth_12m" # (Bin)  >1 SD change in z-score from birth(WFA) to 12m(WFL)	Binary
+  ,"rapid_wgt_0to12m"    # (Bin)  Change in WHO zwgt >0.67	Binary
+  ,"dzwgt_0to12m"        # (Num)  Weight gain velocity from 0 to 12m (change in WHO weight z-score)
 ) 
 # 2 - Covariates and Risk variables
 var_covariates_risk <- c(
-  "cat_pn"         # Dog as  pet  in your home in the last 12 months
-  ,"dog_pn"        # Cat as  pet in your home in the last 12 months
-  ,"ga_wks"        # Gestational Age in weeks
-  ,"ga_wks_cat"    # Gestational Age categories: 1)34-36, 2)37-38, 3)39-40, 4=41+
-  ,"sex"	         # Infant sex (0=Female, 1=Male) - from CHILD profile
-  ,"older_sibs3"	 # Older siblings: 0, 1, 2+
-  ,"lact_season"   # Season of Milk Collection: (1)Winter:Dec-Feb, (2)Spring:Mar-May, (3)Summer:Jun-Aug, (4)Fall:Sept-Nov
-  ,"mom_wtclass3"	 # Moms weight class From mom_wtclass_best
-  ,"prudent"	     # Prudent Diet
+  "cat_pn"         # (Bin) Dog as  pet  in your home in the last 12 months
+  ,"dog_pn"        # (Bin) Cat as  pet in your home in the last 12 months
+  ,"ga_wks"        # (Int) Gestational Age in weeks
+  ,"ga_wks_cat"    # (Cat) Gestational Age categories: 1)34-36, 2)37-38, 3)39-40, 4=41+
+  ,"sex"	         # (Bin) Infant sex (0=Female, 1=Male) - from CHILD profile
+  ,"older_sibs3"	 # (Cat) Older siblings: 0, 1, 2+
+  ,"lact_season"   # (Cat) Season of Milk Collection: (1)Winter:Dec-Feb, (2)Spring:Mar-May, (3)Summer:Jun-Aug, (4)Fall:Sept-Nov
+  ,"mom_wtclass3"	 # (Cat) Moms weight class From mom_wtclass_best
+  ,"prudent"	     # (Num) Prudent Diet
 )
 # 3 - Extra
 var_extra <- c(
-  "alcohol"          # alcohol (g)
-  ,"caffeine"        # caffeine (mg)
+  "alcohol"          # (Num) alcohol (g)
+  ,"caffeine"        # (Num) caffeine (mg)
 )
 # 4 - Feeding
 var_feeding <- c(
-  "bf_duration_imp"  # Breastfeeding Duration in Months (implied)
-  ,"bf_12m"          # Breastfeeding at 12 Months (final)
-  ,"diet_sampling"	 # Infant Diet at milk sample collection - BFS: Breast, Formula, Solids (CAPITAL=YES, small=no)
-  ,"ebf_duration"	    # Duration of Exclusive Breastfeeding (Months)
+  "bf_duration_imp"  # (Int) Breastfeeding Duration in Months (implied)
+  ,"bf_12m"          # (Bin) Breastfeeding at 12 Months (final)
+  ,"diet_sampling"	 # (Cat) Infant Diet at milk sample collection - BFS: Breast, Formula, Solids (CAPITAL=YES, small=no)
+  ,"ebf_duration"	   # (Int) Duration of Exclusive Breastfeeding (Months)
   
 )
 #5 - Milk Components
 var_milk_components <- c(
-  "hmo_total"	       # Sum of all  HMOs
-  ,"hmo_diversity"	 # HMO Diversity
+  "hmo_total"	       # (Num) Sum of all  HMOs
+  ,"hmo_diversity"	 # (Num) HMO Diversity
 )
 
 # assemble a focal ds of the project (we dont' want to many variables distracting us)
@@ -132,9 +132,9 @@ focal_variables <- list(
 ds %>% group_by(pets_home_12m) %>% dplyr::count()
 
 # ---- inspect-data-1 ----------------------------
-# ds %>% explore::explore_all(ncol = 5 )
-ds %>% explore::describe()
 ds %>% dplyr::glimpse()
+ds %>% explore::describe()
+# ds %>% explore::explore_all(ncol = 5 )
 # ---- inspect-data-2 ----------------------------
 # to view the outcomes against ONLY continuous variables
 # ds %>% 
@@ -152,100 +152,55 @@ ds %>% dplyr::glimpse()
 
 
 # ----- temp-explore ---------------------
-ds %>% dplyr::select_(.dots = var_clinical_outcomes_1y) %>% 
-  GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
-# 2
-outcomes_covariates <- c(
-  var_clinical_outcomes_1y
-  ,setdiff(var_covariates_risk,c("cat_pn","dog_pn")) 
-  ,"pets_home_12m"
-)
-ds %>% 
-  dplyr::select_(.dots = outcomes_covariates) %>% 
-  GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
-# 3
-milk_feeding_extra <- c(
-  var_milk_components, var_feeding, var_extra, "atopy_1y"
-)
-ds %>% 
-  dplyr::select_(.dots = milk_feeding_extra) %>% 
-  GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
-ds1 <- ds %>% 
-  dplyr::select(
-    hmo_diversity   
-    ,prudent
-    ,bf_duration_imp
-    ,dzwgt_0to12m
-    ,hmo_total
-    ,atopy_1y   
-    ,pets_home_12m   
-    ,older_sibs3 
-  ) %>% 
-  GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
+# ds %>% dplyr::select_(.dots = var_clinical_outcomes_1y) %>% 
+#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
+# 
+# # 2
+# outcomes_covariates <- c(
+#   var_clinical_outcomes_1y
+#   ,setdiff(var_covariates_risk,c("cat_pn","dog_pn")) 
+#   ,"pets_home_12m"
+# )
+# ds %>% 
+#   dplyr::select_(.dots = outcomes_covariates) %>% 
+#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
+# 
+# # 3
+# milk_feeding_extra <- c(
+#   var_milk_components, var_feeding, var_extra, "atopy_1y"
+# )
+# ds %>% 
+#   dplyr::select_(.dots = milk_feeding_extra) %>% 
+#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
+# 
+# ds1 <- ds %>% 
+#   dplyr::select(
+#     hmo_diversity   
+#     ,prudent
+#     ,bf_duration_imp
+#     ,dzwgt_0to12m
+#     ,hmo_total
+#     ,atopy_1y   
+#     ,pets_home_12m   
+#     ,older_sibs3 
+#   ) %>% 
+#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
 
 # ---- inspect-data-3 ----------------------------
-table(ds1$atopy_1y, ds1$pets_home_12m)
-
-# ---- declare-components ----------------------
+table(ds$atopy_1y, ds$pets_home_12m)
 table(ds$older_sibs3,ds$pets_home_12m )
 table(ds$lact_season,ds$older_sibs3 )
 table(ds$ga_wks,ds$older_sibs3 )
 table(ds$ga_wks_cat,ds$older_sibs3 )
-# ---- inspect-data-2 --------------------------
-
-# ---- inspect-data-3 --------------------------
-
-# ---- phase-1-graph -----------------------
-# now let us find ways to look at/in/with data
-# the above analysis helps us to conceptualize available variables as:
-ds %>% dplyr::glimpse()
-
-#  I - DATA space
-
-## MEASURE - hmo_diversity  ( 0 - 2,500) 
-## MEASURE - hmo_total      ( 0 - 10 )
-## DESIGN  - atopy_1y       ( yes, no)
-## DESIGN  - pets_home_12m  ( none, dogs, cats, both )
-## DESIGN  - older_sibs3    ( 0, 1, 2+ )
-
-
-#  II - VISUALIZATION space 
-
-## INTERNAL - horizontal - X - MEASURE - (hmo_diversity) 
-## INTERNAL - vertical   - Y - MEASURE - (hmo_totatl)  
-## INTERNAL - color      - Z - DESIGN  - (atopy_1y)
-## EXTERNAL - horizontal - K - DESIGN  - (pets_home_12m)
-## EXTERNAL - vertial    - P - DESIGN  - (older_sibs3)
-
-
-# ---- phase-1-graph-1 --------------------------
-# let us sketch the most basic graph in 3 internal dimensions
-# notice that we isolate a single value on all the rest dimensions
-
-# to add a few bells and whistles that aid quick evaluation:
-
-# ---- phase-1-graph-2 --------------------------
-# let us introduce external dimensions through faceting
-# we will keep one of the external dimension constant and facet_wrap on the other
-
-
-# ---- phase-1-graph-3 --------------------------
-# now let facet_grid on both demension
-
-# ---- phase-2-make_plot --------------------------
-# suppose, we have settled on the graphical form `...` (immediately above), repeat below
-
+# ---- declare-components ----------------------
 
 # ---- phase-1-graph -------------------
 # Let us sketch a graph that would map three dimension:
 # (x) continuous, (y) continuous, (color) discrete
 
-#1
+# to create a ggplot2 object
 g1 <- ds %>%
-  tidyr::drop_na(.dots = c("older_sibs3")) %>%
+  # tidyr::drop_na(.dots = c("older_sibs3")) %>% # explore
   ggplot(
     aes(
       x      = hmo_total
@@ -254,8 +209,8 @@ g1 <- ds %>%
     )
   ) +
   geom_point()+
-  facet_grid( pets_home_12m ~ older_sibs3 )+
-  # facet_grid( pets_home_12m ~ older_sibs3 )+
+  # facet_grid( pets_home_12m ~ older_sibs3 )+ # explore
+  # facet_grid( pets_home_12m ~ older_sibs3 )+# explore
   theme_minimal()
 g1
 
@@ -312,7 +267,7 @@ make_plot_1_packed <- function(
   d1 <- d %>% 
     tidyr::drop_na(.dots = dim_color) # to avoid clutter in labels
   custom_label_title = paste0(
-    dim_horizontal," (spread by) ", dim_vertical, " (colored by) ", dim_color
+    "(",dim_color,") across (", dim_horizontal,") and (",dim_vertical,")" 
   )
   custom_label_x     = toupper(dim_horizontal)
   custom_label_y     = toupper(dim_vertical)
@@ -347,19 +302,23 @@ g <- ds %>%
   make_plot_1_packed(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_color      = "atopy_1y"
+    # ,dim_color      = "atopy_1y"
+    ,dim_color      = "ow_1y"
   )# or:
 # g <- ds %>% make_plot_1_packed("hmo_total","wtg_velocity","wz_recurrent_1y")
+g
 
+# ---- phase-2-make_plot-3 --------------------------
 # applications: 
 g <- ds %>% 
   make_plot_1_packed(
-    dim_horizontal  = "hmo_total"
-    # dim_horizontal  = "prudent"
+    # dim_horizontal  = "hmo_total"
+    dim_horizontal  = "prudent"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_color      = "atopy_1y"
+    # ,dim_vertical   = "ebf_duration"
+    # ,dim_color      = "atopy_1y"
     # ,dim_color      = "wz_recurrent_1y"
-    # ,dim_color      = "rapid_wgt_0to12m"
+    ,dim_color      = "rapid_wgt_0to12m"
     # ,dim_color      = "wtclass_1y"
     # ,dim_color      = "wtg_velocity" # will produce error
     #http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
@@ -375,8 +334,7 @@ g
 # to the `prep_data` function
 
 # ---- phase-3-prep_data-1 ------------------------------
-
-# let us construct a new `prep_data` function that would
+# let us construct a new `prep_data` function that would 
 # isolate the preparatory operations from the `make_plot` function
 prep_data_plot_1 <- function(
   d
@@ -395,7 +353,7 @@ prep_data_plot_1 <- function(
   d1 <- d %>% 
     tidyr::drop_na(.dots = dim_color) # to avoid clutter in labels
   custom_label_title = paste0(
-    dim_horizontal," (spread by) ", dim_vertical, " (colored by) ", dim_color
+    "(",dim_color,") across (", dim_horizontal,") and (",dim_vertical,")" 
   )
   custom_label_x     = toupper(dim_horizontal)
   custom_label_y     = toupper(dim_vertical)
@@ -427,11 +385,13 @@ l_support <- ds %>%
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
     ,dim_color      = "atopy_1y"
+    # ,dim_color      = "wtclass_1y"
   )
 l_support %>% print()
 
 # now we can pass this curated object `l_support` to graphing function
 # note that we need to adjust the function to accomodate a new input object
+
 make_plot_1 <- function(
   l_support
   ,palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
@@ -462,14 +422,16 @@ make_plot_1 <- function(
   return(l_support)  
 }
 # how to use
+# to add a new element in `l_support`` that would contain the plot
 l_support <- ds %>% 
   prep_data_plot_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_color      = "atopy_1y"
+    # ,dim_color      = "atopy_1y"
+    ,dim_color      = "wz_recurrent_1y"
   ) %>% 
   make_plot_1()
-l_support$graph %>% print()
+l_support$graph %>% print() # note that printing is a separate step
 
 # applications:
 l_support <- ds %>% 
@@ -496,29 +458,26 @@ print_plot_1 <- function(
   ,graph_name = "auto"
   ,...
 ){
-  if( graph_name == "auto" ){
-    graph_name <- paste0(
-      # should be replaced with features appropriate for analysis
-      l_support$measure
-      ,"-("
-      ,l_support$set$sex %>% paste0(collapse = "-")
-      ,")-("
-      ,l_support$set$area %>% paste0(collapse = "-")
-      ,")-("
-      ,l_support$set$age_group %>% paste0(collapse = "-")
-      ,")"
-      ,collapse = "-"
-    )
-  }else{
-    graph_name <- paste0(l_support$measure,"-", graph_name)
+  # path_output_folder = "./analysis/prep-plot-print/demo-1/"
+  # prefex            = "attempt1"
+
+  file_name = paste0("("
+    ,l_support$dimension["color"]
+    ,")-across-("
+    , l_support$dimension["horizontal"]
+    ,")-and-("
+    ,l_support$dimension["vertical"]
+    ,")" 
+  )
+  if( !graph_name == "auto" ){ # to trigger auto, must be `auto`
+    (file_name <- graph_name) # replace with a custom string 
   }
   # add a label to distinguish a particular graph (first element in the file name)
   if( !is.na(prefex) ){ # inserts a PREFEX before the graph name
-    (path_save_plot <- paste0(path_output_folder, prefex,"-",graph_name) )
+    (path_save_plot <- paste0(path_output_folder, prefex,"-",file_name) )
   }else{
-    ( path_save_plot <- paste0(path_output_folder, graph_name) )
+    ( path_save_plot <- paste0(path_output_folder, file_name) )
   }
-
   # if folder does not exist yet, create it
   if( !dir.exists(path_output_folder) ){
     dir.create(path_output_folder)
@@ -529,46 +488,31 @@ print_plot_1 <- function(
     filename = path_printed_plot
     ,...
   )
-  l_support$graph %>% print() # reach into the custom object we made for graphing
+  l_support$graph %>% print() # reach into the custom object we made for plotting
   dev.off() # close the device
-  l_support[["path_plot"]] <- path_printed_plot
+  l_support[["path_plot"]] <- path_printed_plot # save the path where plot was printed
   return(l_support)
 }
 # how to use
-l_support <- ds1 %>% 
+l_support <- ds %>% 
   prep_data_plot_1(
-    set_sex        = c("Females", "Males") 
-    # set_sex        = c("Females", "Males", "Both sexes") 
-    ,set_area      = c("Canada", "Alberta", "British Columbia") 
-    ,set_age_group = c("1-19", "20-34", "80+","1+")
+    dim_horizontal  = "hmo_total"
+    ,dim_vertical   = "wtg_velocity"
+    ,dim_color      = "atopy_1y"
   ) %>% 
-  make_plot_1(
-    measure = "rate"
-  ) %>% 
+  make_plot_1() %>% 
   print_plot_1(
-    path_output_folder = "./analysis/scenario-3/prints/demo-1/"
-    # ,prefex            = "attempt1"
+    path_output_folder = "./analysis/prep-plot-print/demo-1/"
+    ,prefex            = "1600-900"
     # ,graph_name        = "take1" # `auto` by default
 # options added through `...` into the jpeg() function   
-    ,width   = 1700
-    ,height  = 500
-    ,units   = "px"
-    ,quality = 100
-    ,res     = 200
+    ,width   = 1600
+    ,height  = 900
+    ,units   = "px" # "px" - pixels,  "in" - inches , "cm" - centimiters
+    ,quality = 100  # percent
+    ,res     = 200  # resolution, dots per inch
+    # ,res     = 100 
   )
-# ---- phase-4-print_plot-1 ---------------------------------
-# notice that if I print the GRAPH by reaching into the `l_support` object
-# if will be displayed according to the `fig.width`, `fig.height`, and `out.width`
-# parameters specified in the chuck options (in the .Rmd file)
-l_support$graph %>% print()
-
-# ---- phase-4-print_plot-2 ---------------------------------
-# if, however, we reach into the disk, we will recover the image generated
-# with the dimensions and specs defined in the `print_plot` function
-l_support$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
-
-
-
 # ---- dimensions ----------------------
 # canvas size guide ( portrait orientation )
 
@@ -579,14 +523,23 @@ l_support$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
 # Junior Legal     127 x 203           5.0 x  8.0          1: 1.60
 # Ledger/Tabloid   279 x 432          11.0 x 17.0          1: 1.55
 
+# ---- phase-4-print_plot-1 ---------------------------------
+# notice that if I print the GRAPH by reaching into the `l_support` object
+# if will be displayed according to the `fig.width`, `fig.height`, and `out.width`
+# parameters specified in the chuck options (in the .Rmd file)
+l_support$graph %>% print()
+# ---- phase-4-print_plot-2 ---------------------------------
+# if, however, we reach into the disk, we will recover the image generated
+# with the dimensions and specs defined in the `print_plot` function
+l_support$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
+# this is where savingt he path to the printed object comes handy
 
 # ---- phase-5-serialize ---------------------------------
 # it often makes sense to genrate a series of plot to be explored manually
 
 # GRAPH SERIES 1
-path_target <- "./analysis/scenario-3/prints/series_1/"
-provinces_to_pair     <- c("British Columbia", "Alberta", "Quebec")
-age_groups_to_display <- c("1-19", "20-34", "35-49", "50-64","65-79","80+","+1")
+path_target <- "./analysis/prep-plot-print/series_1/"
+outcomes_to_investigate <- c("")
 # for each selected province create a comparison with Canada
 ls_plot_series <- list()
 for(province_i in provinces_to_pair){
