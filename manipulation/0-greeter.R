@@ -55,38 +55,15 @@ for(i in seq_along(dto$variable_set)){
 names(dto[["data"]]) <- dto[["variable_set"]]
 names(dto[["meta"]]) <- dto[["variable_set"]]
 
-dto %>% lapply(glimpse)
-# ---- tweak-1 -----------------------------------------------------
+# ---- tweak-data --------------------------------------------------
+# ---- inspect-data ----------------------------------------------
 
+dto %>% lapply(class)
+dto %>% lapply(names)
 
 # ---- basic-table ----------------------------
-# ds_combined %>% 
-#   dplyr::select(-county_zipcode) %>% 
-#   dplyr::mutate(
-#     year   = lubridate::year(date) %>% as.character()
-#     ,month = lubridate::month(date) %>% as.character()
-#     ,day   = lubridate::wday(date ) %>% as.character()
-#   ) %>% 
-#   neat_DT()
 
 # ---- basic-pivot -----------------------------
-# ds_combined %>% 
-#   dplyr::select(-county_zipcode) %>% 
-#   dplyr::mutate(
-#     year   = lubridate::year(date)
-#     ,month = lubridate::month(date)
-#     ,day   = lubridate::wday(date )
-#   ) %>% 
-#   rpivotTable::rpivotTable(
-#     rows = c("audience", "county")
-#     , cols = c("year")
-#     , vals = "n_trained"
-#     , aggregatorName = "Integer Sum"
-#     , rendererName = "Heatmap"
-#     # , width="100%"
-#     # , height="400px"
-#   )
-
 
 # ---- save-to-disk ----------------------------
 
@@ -94,12 +71,13 @@ dto %>% pryr::object_size()
 dto %>% saveRDS("./data-unshared/derived/0-greeted.rds")
 # ---- publish ---------------------------------
 
-# path_report_1 <- "./analysis/0-greeter/0-greeter-table.Rmd"
-# path_report_2 <- "./analysis/0-greeter/0-greeter-pivot.Rmd"
+path_report_1 <- "./analysis/0-greeter/0-greeter-table.Rmd"
+path_report_2 <- "./analysis/0-greeter/0-greeter-pivot.Rmd"
 path_report_3 <- "./analysis/0-greeter/0-greeter.Rmd"
 
 # allReports <- c(path_report_1,path_report_2, path_report_3)
-allReports <- c(path_report_3)
+# allReports <- c(path_report_3)
+allReports <- c(path_report_1)
 
 pathFilesToBuild <- c(allReports)
 testit::assert("The knitr Rmd files should exist.", base::file.exists(pathFilesToBuild))

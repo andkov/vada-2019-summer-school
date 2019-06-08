@@ -54,7 +54,7 @@ read_chunk("./manipulation/0-greeter.R")
 
 This document is the annotation layer to [`./manipulation/0-greeter.R`][path_greeter] script, which connects to data sources used in the study, imports them into RStudio environment and prepares them for analytic enquiry.
 
-[path_greeter]:
+[path_greeter]:https://github.com/andkov/vada-2019-summer-school/blob/master/manipulation/0-greeter.R
 
 # I. Environment
 
