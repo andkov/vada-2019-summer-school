@@ -35,8 +35,18 @@ dto %>% pryr::object_size(); dto %>% class(); dto %>% names()
 # to select target variables from each source 
 # 1 - Clinical Outcomes at year 1
 var_clinical_outcomes_1y <- c(
-  "atopy_1y"       # Atopy at 1y (by SPT - reaction to any allergen)
-  ,"dzwgt_0to12m"  # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
+   "atopy_1y"             # Atopy at 1y (by SPT - reaction to any allergen)
+  ,"wz_recurrent_1y"     # Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
+  ,"atopy_1y"            # Atopy at 1y (by SPT - reaction to any allergen)	Binary
+  ,"atopy_food_1y"       # Sensitization to food allergen at 1y by SPT	Binary
+  ,"atopy_nonfood_1y"    # Sensitization to non-food allergen at 1y by SPT	Binary
+  ,"wtclass_1y"          # Weight Class at 1y (based on WFL z-score)	Categorical
+  ,"ow_1y"               # Overweight at 1y (WFL z-score > 97%ile)	Binary
+  ,"owrisk_1y"           # At risk for overweight at 1y (WFL z-score > 85%ile)	Binary
+  ,"rapid_bmigrowth_12m" # >1 SD change in z-score from birth(BMI) to 12m(BMI)	Binary
+  ,"rapid_wflgrowth_12m" # >1 SD change in z-score from birth(WFA) to 12m(WFL)	Binary
+  ,"rapid_wgt_0to12m"    # Change in WHO zwgt >0.67	Binary
+  ,"dzwgt_0to12m"        # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
 ) 
 # 2 - Covariates and Risk variables
 var_covariates_risk <- c(
@@ -92,9 +102,19 @@ ds <- ds %>%
     ) %>%
   # to bring variables in the appropriate format
   dplyr::mutate(
-   atopy_1y     = as.logical(atopy_1y)
-  ,older_sibs3  = as.character(older_sibs3)
-  ,wtg_velocity = dzwgt_0to12m # because hard to spell
+   atopy_1y              = as.logical(atopy_1y)
+   ,wz_recurrent_1y      = as.logical(wz_recurrent_1y)                
+   ,atopy_1y             = as.logical(atopy_1y)                
+   ,atopy_food_1y        = as.logical(atopy_food_1y)                
+   ,atopy_nonfood_1y     = as.logical(atopy_nonfood_1y)                
+   ,ow_1y                = as.logical(ow_1y)                
+   ,owrisk_1y            = as.logical(owrisk_1y)                
+   ,rapid_bmigrowth_12m  = as.logical(rapid_bmigrowth_12m)                
+   ,rapid_wflgrowth_12m  = as.logical(rapid_wflgrowth_12m)                
+   ,rapid_wgt_0to12m     = as.logical(rapid_wgt_0to12m)                
+  
+   ,older_sibs3          = as.character(older_sibs3)
+   ,wtg_velocity         = dzwgt_0to12m # because hard to spell
 ) 
 # to update the definition of the group set:
 var_covariates_risk <- c(var_covariates_risk,"pets_home_12m")
@@ -108,14 +128,13 @@ focal_variables <- list(
   ,"milk"       = var_milk_components
 )
 
-
 # to view the new categorical variable
 ds %>% group_by(pets_home_12m) %>% dplyr::count()
 
 # ---- inspect-data-1 ----------------------------
 # ds %>% explore::explore_all(ncol = 5 )
 ds %>% explore::describe()
-
+ds %>% dplyr::glimpse()
 # ---- inspect-data-2 ----------------------------
 # to view the outcomes against ONLY continuous variables
 # ds %>% 
@@ -235,7 +254,7 @@ g1 <- ds %>%
     )
   ) +
   geom_point()+
-  # facet_grid( pets_home_12m ~ older_sibs3 )+
+  facet_grid( pets_home_12m ~ older_sibs3 )+
   # facet_grid( pets_home_12m ~ older_sibs3 )+
   theme_minimal()
 g1
@@ -245,11 +264,9 @@ g1
 make_plot_1_basic <- function(
   d
 ){
-  # d <- ds
+  # d <- ds # for testing and development
   g_out <- d %>%
-    # ds %>%
-    tidyr::drop_na(.dots = c("older_sibs3")) %>%
-    ggplot(
+     ggplot(
       aes(
         x      = hmo_total
         ,y     = wtg_velocity
@@ -257,78 +274,100 @@ make_plot_1_basic <- function(
       )
     ) +
     geom_point()+
-    # facet_grid( pets_home_12m ~ older_sibs3 )+
     theme_minimal()
-  # g_out
+
   return(g_out)  
 }
 # how to use:
 g <- ds %>% 
+  # tidyr::drop_na(.dots = c("older_sibs3")) %>%
   # dplyr::filter(older_sibs3 == 0) %>%
   # dplyr::filter(pets_home_12m == "none") %>% 
-  # notice that we keep operations on the data outside of the function definition
+  # notice that we keep some operations on the data outside of the function definition
   make_plot_1_basic()
 g
+# g +  facet_grid( pets_home_12m ~ older_sibs3 )
 
 # ---- phase-2-make_plot-2 --------------------------
 # We need our function to offer us a convenient way to:
-# 1. Control the order of the columns (and which are displayed)
-# 2. Control the order of the rows    (and which are displayed)
-# 3. Control the order and aesthetics of the color dimention
+# 1. Control what variables are mapped onto the three dimensions we use
+# 2. Control how color is mapped onto the level of the categorical variable 
 
 # if we were to pack everything into a single function we would get something like:
 make_plot_1_packed <- function(
   d
-  ,measure
+  ,dim_horizontal
+  ,dim_vertical  
+  ,dim_color
+  ,palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02")
 ){
-  d1 <- d
-  # d1 <- ds1 # for testing and development
-  # create support objects
-  order_of_age_group <- d1 %>% 
-    dplyr::arrange() %>% 
-    dplyr::distinct(var_outer_1) %>% 
-    as.list() %>% unlist() %>% as.character()
+  # to declare values for testing and development (within this function)
+  # d <- ds 
+  # dim_horizontal = "hmo_total"
+  # dim_vertical   = "wtg_velocity"
+  # dim_color      = "atopy_1y"
+  # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02")
+  
+  # data prep step
+  d1 <- d %>% 
+    tidyr::drop_na(.dots = dim_color) # to avoid clutter in labels
+  custom_label_title = paste0(
+    dim_horizontal," (spread by) ", dim_vertical, " (colored by) ", dim_color
+  )
+  custom_label_x     = toupper(dim_horizontal)
+  custom_label_y     = toupper(dim_vertical)
+  custom_label_color = toupper(dim_color)
+  
+  # plotting prep step
+  # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
 
-  order_of_areas <- d1 %>% 
-    dplyr::arrange() %>% 
-    dplyr::distinct(var_outer_1) %>% 
-    as.list() %>% unlist() %>% as.character()
-    
-  # to customize the order of levels of the color dimension
-  levels_sex <- c("Females", "Males","Both sexes")
-  # 
-  d1 <- d #%>% # add more here
-  # to create custom pallets:
-  
-  # descriptive tag              # green     # red      # blue
-  palette_sex_dark         <- c("#1b9e77", "#d95f02", "#7570b3") #duller than below
-  # palette_sex_dark         <- c("#66c2a5", "#fc8d62", "#8da0cb") #brighter than above
-  # taken from http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
-  pallete_sex_light        <- adjustcolor(palette_sex_dark, alpha.f = .2)
-  names(palette_sex_dark)  <- c("Both sexes", "Females", "Males")
-  names(pallete_sex_light) <- names(pallete_sex_light)
-  
-  g_out <- d %>% 
-    ggplot(aes_string(
-      x      = "year" # continuous
-      ,y     = measure
-      ,color = "sex" # binary/categorical
-    ))+
+  # plotting step
+  g_out <- d1 %>%
+    ggplot(
+      aes_string(
+        x      = dim_horizontal # continuous  # hmo_total
+        ,y     = dim_vertical   # continuous  # wtg_velocity
+        ,color = dim_color      # categorical # atopy_1y 
+      )
+    ) +
     geom_point()+
-    geom_line( aes_string(group = "sex") )+
-    facet_grid(area ~ age_group)+ # categorical ~ categorical
+    scale_color_manual(values = palette_custom)+
     theme_minimal()+
-    labs( title = "")
-  
+    labs(
+      title  = custom_label_title
+      ,x     = custom_label_x
+      ,y     = custom_label_y
+      ,color = custom_label_color 
+    )
+    # g_out # for viewing while developing
   return(g_out)  
 }
 # how to use
-ds1 %>% 
-  # to limit the view while in development
-  dplyr::filter(age_group %in% c("1-19", "20-34", "80+","1+")) %>%
-  dplyr::filter(area %in% c("Canada", "Alberta", "British Columbia")) %>%
-  dplyr::filter(sex %in% c("Males","Females")) %>%
-  make_plot_1_packed(measure = "rate")
+g <- ds %>% 
+  make_plot_1_packed(
+    dim_horizontal  = "hmo_total"
+    ,dim_vertical   = "wtg_velocity"
+    ,dim_color      = "atopy_1y"
+  )# or:
+# g <- ds %>% make_plot_1_packed("hmo_total","wtg_velocity","wz_recurrent_1y")
+
+# applications: 
+g <- ds %>% 
+  make_plot_1_packed(
+    dim_horizontal  = "hmo_total"
+    # dim_horizontal  = "prudent"
+    ,dim_vertical   = "wtg_velocity"
+    ,dim_color      = "atopy_1y"
+    # ,dim_color      = "wz_recurrent_1y"
+    # ,dim_color      = "rapid_wgt_0to12m"
+    # ,dim_color      = "wtclass_1y"
+    # ,dim_color      = "wtg_velocity" # will produce error
+    #http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
+    # ,palette_custom = c("1-Normal" = "#1b9e77", "2-At Risk" = "#d95f02", "3-Overweight" = "#7570b3")
+  ) 
+g
+# g +  facet_grid( pets_home_12m ~ older_sibs3 )
+
 
 # as you notice, the function got bulkier due to operations needed
 # to construct a reference vector for factor levels 
@@ -340,46 +379,54 @@ ds1 %>%
 # let us construct a new `prep_data` function that would
 # isolate the preparatory operations from the `make_plot` function
 prep_data_plot_1 <- function(
-  d_input
-  ,set_area      #= c("Canada")
-  ,set_age_group #= c("20-34")
-  ,set_sex       #= c("Males","Females")
+  d
+  ,dim_horizontal
+  ,dim_vertical  
+  ,dim_color
 ){
-  d1 <- d_input  # for within-function use
+  # to declare values for testing and development (within this function)
+  # d <- ds
+  # dim_horizontal = "hmo_total"
+  # dim_vertical   = "wtg_velocity"
+  # dim_color      = "atopy_1y"
+  # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02")
+
+  # data prep step
+  d1 <- d %>% 
+    tidyr::drop_na(.dots = dim_color) # to avoid clutter in labels
+  custom_label_title = paste0(
+    dim_horizontal," (spread by) ", dim_vertical, " (colored by) ", dim_color
+  )
+  custom_label_x     = toupper(dim_horizontal)
+  custom_label_y     = toupper(dim_vertical)
+  custom_label_color = toupper(dim_color)
   
-  d2 <- d1 %>% 
-    dplyr::filter(area      %in% set_area      ) %>%
-    dplyr::filter(age_group %in% set_age_group ) %>%
-    dplyr::filter(sex       %in% set_sex       ) %>% 
-    dplyr::mutate(
-      # to create a shorter label
-      years_since_2000 = year - 2000
-      # to enforce the chosen order of the levels:
-      ,area      = factor(area,      levels = set_area)
-      ,age_group = factor(age_group, levels = set_age_group)
-      ,sex       = factor(sex,       levels = set_sex )
-    )
   # to store objects for passing to the `make_plot` function
   l_support <- list()
-  l_support[["data"]] <- d2
-  l_support[["set"]] <- list() # in case the first element is single
-  l_support[["set"]][["sex"]]       <- set_sex
-  l_support[["set"]][["area"]]      <- set_area
-  l_support[["set"]][["age_group"]] <- set_age_group
+  l_support[["data"]] <- d1
+  l_support[["dimension"]] <- c(
+    "horizontal" = dim_horizontal
+    ,"vertical"  = dim_vertical
+    ,"color"     = dim_color
+  )
+  l_support[["label"]] <- c(
+     "x"      = custom_label_x
+    ,"y"      = custom_label_y
+    ,"color"  = custom_label_color
+    ,"title"  = custom_label_title
+  )
+  
   lapply(l_support, class) # view contents
   # the make_plot funtion will rely on the structure and values in l_support
 
   return(l_support)
 }
 # how to use
-l_support <- ds1 %>% 
+l_support <- ds %>% 
   prep_data_plot_1(
-    set_area      = c("Canada")
-    # set_area      = c("Canada", "Alberta", "British Columbia") 
-    # ,set_sex       = c("Females", "Males")
-    ,set_sex       = c("Both sexes")
-    # ,set_age_group = c("1-19", "20-34", "80+","1+")
-    ,set_age_group = c("1+")
+    dim_horizontal  = "hmo_total"
+    ,dim_vertical   = "wtg_velocity"
+    ,dim_color      = "atopy_1y"
   )
 l_support %>% print()
 
@@ -387,46 +434,57 @@ l_support %>% print()
 # note that we need to adjust the function to accomodate a new input object
 make_plot_1 <- function(
   l_support
-  ,measure 
+  ,palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
 ){
-  d <- l_support$data
-  # to customize the color 
-  # descriptive tag              # green     # red      # blue
-  palette_sex_dark         <- c("#1b9e77", "#d95f02", "#7570b3") #duller than below
-  # palette_sex_dark         <- c("#66c2a5", "#fc8d62", "#8da0cb") #brighter than above
-  # taken from http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
-  pallete_sex_light        <- adjustcolor(palette_sex_dark, alpha.f = .2)
-  names(palette_sex_dark)  <- c("Both sexes", "Females", "Males")
-  names(pallete_sex_light) <- names(pallete_sex_light)
-  
-  g_out <- d %>% 
-    ggplot(aes_string(
-      x      = "years_since_2000"
-      ,y     = measure
-      ,color = "sex"
-    ))+
+  # plotting prep step
+  # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
+
+    # plotting step
+  g_out <- l_support[["data"]] %>%
+    ggplot(
+      aes_string(
+        x      = l_support[["dimension"]]["horizontal"] # continuous  # hmo_total
+        ,y     = l_support[["dimension"]]["vertical"]   # continuous  # wtg_velocity
+        ,color = l_support[["dimension"]]["color"]      # categorical # atopy_1y 
+      )
+    ) +
     geom_point()+
-    geom_line( aes_string(group = "sex") )+
-    facet_grid(area ~ age_group)+
-    scale_color_manual(values = palette_sex_dark)+
-    # scale_color_manual(values = pallete_sex_light)+
+    scale_color_manual(values = palette_custom)+
     theme_minimal()+
-    labs( title = "Crude prevalence of MH service utilization")
+    labs(
+      title  = l_support[["label"]]["title"]    
+      ,x     = l_support[["label"]]["x"]    
+      ,y     = l_support[["label"]]["y"]
+      ,color = l_support[["label"]]["color"]
+    )
+  # g_out # for viewing while developing
   l_support[["graph"]]   <- g_out
-  l_support[["measure"]] <- measure
   return(l_support)  
 }
 # how to use
-l_support <- ds1 %>% 
+l_support <- ds %>% 
   prep_data_plot_1(
-    # set_area      = c("Canada")
-    set_area      = c("Canada", "Alberta", "British Columbia")
-    ,set_sex       = c("Females", "Males")
-    # ,set_sex       = c("Both sexes")
-    # ,set_age_group = c("1-19", "20-34", "80+","1+")
-    ,set_age_group = c("1+")
+    dim_horizontal  = "hmo_total"
+    ,dim_vertical   = "wtg_velocity"
+    ,dim_color      = "atopy_1y"
   ) %>% 
-  make_plot_1(measure = "rate")
+  make_plot_1()
+l_support$graph %>% print()
+
+# applications:
+l_support <- ds %>% 
+  prep_data_plot_1(
+    dim_horizontal  = "hmo_total"
+    ,dim_vertical   = "wtg_velocity"
+    # ,dim_color      = "atopy_1y"
+    # ,dim_color      = "rapid_wgt_0to12m"
+    ,dim_color      = "wtclass_1y"
+    # ,dim_color      = "wtg_velocity" # will produce error
+  ) %>% 
+  make_plot_1(
+    #http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
+    palette_custom = c("1-Normal" = "#1b9e77", "2-At Risk" = "#d95f02", "3-Overweight" = "#7570b3")
+  )
 l_support$graph %>% print()
 
 # ---- phase-4-print_plot ---------------------------------
@@ -454,7 +512,7 @@ print_plot_1 <- function(
   }else{
     graph_name <- paste0(l_support$measure,"-", graph_name)
   }
-  # add a label to distinguish a particular graph (last element in the file name)
+  # add a label to distinguish a particular graph (first element in the file name)
   if( !is.na(prefex) ){ # inserts a PREFEX before the graph name
     (path_save_plot <- paste0(path_output_folder, prefex,"-",graph_name) )
   }else{
