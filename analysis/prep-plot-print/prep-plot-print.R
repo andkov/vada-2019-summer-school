@@ -35,18 +35,18 @@ dto %>% pryr::object_size(); dto %>% class(); dto %>% names()
 # to select target variables from each source 
 # 1 - Clinical Outcomes at year 1
 var_clinical_outcomes_1y <- c(
-   "atopy_1y"            # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
-  ,"wz_recurrent_1y"     # (Bin)  Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
-  ,"atopy_1y"            # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)	Binary
-  ,"atopy_food_1y"       # (Bin)  Sensitization to food allergen at 1y by SPT	Binary
-  ,"atopy_nonfood_1y"    # (Bin)  Sensitization to non-food allergen at 1y by SPT	Binary
-  ,"wtclass_1y"          # (Cat3) Weight Class at 1y (based on WFL z-score)	Categorical
-  ,"ow_1y"               # (Bin)  Overweight at 1y (WFL z-score > 97%ile)	Binary
-  ,"owrisk_1y"           # (Bin)  At risk for overweight at 1y (WFL z-score > 85%ile)	Binary
-  ,"rapid_bmigrowth_12m" # (Bin)  >1 SD change in z-score from birth(BMI) to 12m(BMI)	Binary
-  ,"rapid_wflgrowth_12m" # (Bin)  >1 SD change in z-score from birth(WFA) to 12m(WFL)	Binary
-  ,"rapid_wgt_0to12m"    # (Bin)  Change in WHO zwgt >0.67	Binary
-  ,"dzwgt_0to12m"        # (Num)  Weight gain velocity from 0 to 12m (change in WHO weight z-score)
+   "atopy_1y"           # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
+  ,"wz_recurrent_1y"    # (Bin)  Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
+  ,"atopy_1y"           # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)	Binary
+  ,"atopy_food_1y"      # (Bin)  Sensitization to food allergen at 1y by SPT	Binary
+  ,"atopy_nonfood_1y"   # (Bin)  Sensitization to non-food allergen at 1y by SPT	Binary
+  ,"wtclass_1y"         # (Cat3) Weight Class at 1y (based on WFL z-score)	Categorical
+  ,"ow_1y"              # (Bin)  Overweight at 1y (WFL z-score > 97%ile)	Binary
+  ,"owrisk_1y"          # (Bin)  At risk for overweight at 1y (WFL z-score > 85%ile)	Binary
+  ,"rapid_bmigrowth_12m"# (Bin)  >1 SD change in z-score from birth(BMI) to 12m(BMI)	Binary
+  ,"rapid_wflgrowth_12m"# (Bin)  >1 SD change in z-score from birth(WFA) to 12m(WFL)	Binary
+  ,"rapid_wgt_0to12m"   # (Bin)  Change in WHO zwgt >0.67	Binary
+  ,"dzwgt_0to12m"       # (Num)  Weight gain velocity from 0 to 12m (change in WHO weight z-score)
 ) 
 # 2 - Covariates and Risk variables
 var_covariates_risk <- c(
@@ -87,7 +87,7 @@ ls_ds <- list(
   ,dto$data$feeding             %>% dplyr::select(c("ids",var_feeding))
   ,dto$data$milk_components     %>% dplyr::select(c("ids",var_milk_components))
 )
-lapply(ls_ds, glimpse)
+lapply(ls_ds, names)
 # combine list of ds into a single ds
 ds <- base::Reduce(dplyr::full_join, ls_ds)
 # to creat a new varaible
@@ -134,22 +134,8 @@ ds %>% group_by(pets_home_12m) %>% dplyr::count()
 # ---- inspect-data-1 ----------------------------
 ds %>% dplyr::glimpse()
 ds %>% explore::describe()
-# ds %>% explore::explore_all(ncol = 5 )
 # ---- inspect-data-2 ----------------------------
-# to view the outcomes against ONLY continuous variables
-# ds %>% 
-#   dplyr::select_(.dots = c(
-#     "atopy_1y"         # outcome # Atopy at 1y (by SPT - reaction to any allergen)
-#     ,"wtg_velocity"    # outcome # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
-#     ,"ga_wks"          # covar   # Gestational Age in weeks
-#     ,"prudent"	       # covar   # Prudent Diet
-#     ,"bf_duration_imp" # feed    # Breastfeeding Duration in Months (implied)
-#     ,"ebf_duration"	   # feed    # Duration of Exclusive Breastfeeding (Months)
-#     ,"hmo_total"	     # milk    # Sum of all  HMOs
-#     ,"hmo_diversity"	 # milk    # HMO Diversity
-#   )) %>% 
-#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
+ds %>% explore::explore_all(ncol = 5 )
 
 # ----- temp-explore ---------------------
 # ds %>% dplyr::select_(.dots = var_clinical_outcomes_1y) %>% 
@@ -187,17 +173,32 @@ ds %>% explore::describe()
 #   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
 
 # ---- inspect-data-3 ----------------------------
-table(ds$atopy_1y, ds$pets_home_12m)
-table(ds$older_sibs3,ds$pets_home_12m )
-table(ds$lact_season,ds$older_sibs3 )
-table(ds$ga_wks,ds$older_sibs3 )
-table(ds$ga_wks_cat,ds$older_sibs3 )
+# to view the outcomes against ONLY continuous variables
+ds %>%
+  dplyr::select_(.dots = c(
+    "atopy_1y"         # outcome # Atopy at 1y (by SPT - reaction to any allergen)
+    ,"wtg_velocity"    # outcome # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
+    ,"ga_wks"          # covar   # Gestational Age in weeks
+    ,"prudent"	       # covar   # Prudent Diet
+    ,"bf_duration_imp" # feed    # Breastfeeding Duration in Months (implied)
+    ,"ebf_duration"	   # feed    # Duration of Exclusive Breastfeeding (Months)
+    ,"hmo_total"	     # milk    # Sum of all  HMOs
+    ,"hmo_diversity"	 # milk    # HMO Diversity
+  )) %>%
+  GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
+
+
 # ---- declare-components ----------------------
 
-# ---- phase-1-graph -------------------
-# Let us sketch a graph that would map three dimension:
-# (x) continuous, (y) continuous, (color) discrete
 
+# ---- phase-1-graph -------------------
+
+# Let us sketch a graph that would map three dimensions:
+# (x)     - horizontal - continuous
+# (y)     - vertical   - continuous
+# (color) - color      - discrete
+
+# ---- phase-1-graph-1 -------------------
 # to create a ggplot2 object
 g1 <- ds %>%
   # tidyr::drop_na(.dots = c("older_sibs3")) %>% # explore
@@ -214,7 +215,7 @@ g1 <- ds %>%
   theme_minimal()
 g1
 
-# ---- phase-2-make_plot-1 --------------------------
+# ---- phase-2-make_plot --------------------------
 # now let us re-express this plot as a custom function
 make_plot_1_basic <- function(
   d
@@ -243,7 +244,7 @@ g <- ds %>%
 g
 # g +  facet_grid( pets_home_12m ~ older_sibs3 )
 
-# ---- phase-2-make_plot-2 --------------------------
+# ---- phase-2-make_plot-1 --------------------------
 # We need our function to offer us a convenient way to:
 # 1. Control what variables are mapped onto the three dimensions we use
 # 2. Control how color is mapped onto the level of the categorical variable 
@@ -308,8 +309,13 @@ g <- ds %>%
 # g <- ds %>% make_plot_1_packed("hmo_total","wtg_velocity","wz_recurrent_1y")
 g
 
-# ---- phase-2-make_plot-3 --------------------------
-# applications: 
+# as you notice, the function got bulkier due to operations needed
+# to construct a reference vector for factor levels 
+# these and other operations are typically best sourced out 
+# to the `prep_data` function
+
+# ---- phase-2-make_plot-2 --------------------------
+# let us explore how we can use this function at this phase of development
 g <- ds %>% 
   make_plot_1_packed(
     # dim_horizontal  = "hmo_total"
@@ -328,12 +334,8 @@ g
 # g +  facet_grid( pets_home_12m ~ older_sibs3 )
 
 
-# as you notice, the function got bulkier due to operations needed
-# to construct a reference vector for factor levels 
-# these and other operations are typically best sourced out 
-# to the `prep_data` function
 
-# ---- phase-3-prep_data-1 ------------------------------
+# ---- phase-3-prep_data ------------------------------
 # let us construct a new `prep_data` function that would 
 # isolate the preparatory operations from the `make_plot` function
 prep_data_plot_1 <- function(
@@ -450,12 +452,12 @@ l_support <- ds %>%
 l_support$graph %>% print()
 
 # ---- phase-4-print_plot ---------------------------------
-
+# Now we need a function that would help up control the printing parameters
 print_plot_1 <- function(
   l_support
   ,path_output_folder
-  ,prefex     = NA
-  ,graph_name = "auto"
+  ,prefex             = NA      # string token to mark the version
+  ,graph_name         = "auto"  # replace with custom name 
   ,...
 ){
   # path_output_folder = "./analysis/prep-plot-print/demo-1/"
@@ -502,7 +504,7 @@ l_support <- ds %>%
   ) %>% 
   make_plot_1() %>% 
   print_plot_1(
-    path_output_folder = "./analysis/prep-plot-print/demo-1/"
+    path_output_folder = "./analysis/prep-plot-print/demo-1-print/"
     ,prefex            = "1600-900"
     # ,graph_name        = "take1" # `auto` by default
 # options added through `...` into the jpeg() function   
@@ -537,70 +539,86 @@ l_support$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
 # ---- phase-5-serialize ---------------------------------
 # it often makes sense to genrate a series of plot to be explored manually
 
-# GRAPH SERIES 1
-path_target <- "./analysis/prep-plot-print/series_1/"
-outcomes_to_investigate <- c("")
-# for each selected province create a comparison with Canada
-ls_plot_series <- list()
-for(province_i in provinces_to_pair){
-  ls_plot_series[[province_i]]  <- ds1 %>%
+# GRAPH SERIES A
+
+outcomes_binary <- c(
+     "atopy_1y"            # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
+    ,"wz_recurrent_1y"     # (Bin)  Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
+    ,"atopy_food_1y"       # (Bin)  Sensitization to food allergen at 1y by SPT	Binary
+    ,"atopy_nonfood_1y"    # (Bin)  Sensitization to non-food allergen at 1y by SPT	Binary
+    # ,"wtclass_1y"          # (Cat3) Weight Class at 1y (based on WFL z-score)	Categorical
+    ,"ow_1y"               # (Bin)  Overweight at 1y (WFL z-score > 97%ile)	Binary
+    ,"owrisk_1y"           # (Bin)  At risk for overweight at 1y (WFL z-score > 85%ile)	Binary
+    ,"rapid_bmigrowth_12m" # (Bin)  >1 SD change in z-score from birth(BMI) to 12m(BMI)	Binary
+    ,"rapid_wflgrowth_12m" # (Bin)  >1 SD change in z-score from birth(WFA) to 12m(WFL)	Binary
+    ,"rapid_wgt_0to12m"    # (Bin)  Change in WHO zwgt >0.67	Binary
+    # ,"dzwgt_0to12m"        # (Num)  Weight gain velocity from 0 to 12m (change in WHO weight z-score)
+  ) 
+
+
+# for each selected outcome create plot_1 in this folder
+path_target <- "./analysis/prep-plot-print/demo-2-series-A/" # where images will be printed
+ls_plot_series <- list() # to capture the collection of graphs and their file paths 
+for(outcome_i in outcomes_binary){
+  ls_plot_series[[outcome_i]]  <- ds %>%
     prep_data_plot_1(
-      set_sex        = c("Females", "Males")
-      ,set_area      = c("Canada", province_i)
-      ,set_age_group = age_groups_to_display
-    ) %>%
-    make_plot_1(
-      measure = "rate"
-    ) %>%
+      dim_horizontal  = "hmo_total"
+      ,dim_vertical   = "wtg_velocity"
+      ,dim_color      = outcome_i
+    ) %>% 
+    make_plot_1() %>% 
     print_plot_1(
-      path_output_folder = path_target
-      # options added through `...` into the jpeg() function
-      ,width   = 1700
-      ,height  = 500
-      ,units   = "px"
-      ,quality = 100
-      ,res     = 200
+      path_output_folder = path_target #  where images will be printed
+      # ,prefex            = "1600-900"
+      # ,graph_name        = "take1" # `auto` by default
+      # options added through `...` into the jpeg() function   
+      ,width   = 1600
+      ,height  = 900
+      ,units   = "px" # "px" - pixels,  "in" - inches , "cm" - centimiters
+      ,quality = 100  # percent
+      ,res     = 200  # resolution, dots per inch
     )
 }
 saveRDS(ls_plot_series, paste0(path_target,"ls_plots.rds") )
 
-# GRAPH SERIES 2
-path_target <- "./analysis/scenario-3/prints/series_2/"
-provinces_to_pair    <- c("British Columbia", "Alberta", "Quebec")
-age_groups_to_display <- c( "+1")
-# for each selected province create a comparison with Canada
-ls_plot_series <- list()
-for(province_i in provinces_to_pair){
-  ls_plot_series[[province_i]]  <- ds1 %>%
+
+# ---- phase-5-serialize-1 ---------------------------------
+
+# GRAPH SERIES B
+# for each selected outcome create plot_1 in this folder
+path_target <- "./analysis/prep-plot-print/demo-2-series-B/" # where images will be printed
+ls_plot_series <- list() # to capture the collection of graphs and their file paths 
+for(outcome_i in outcomes_binary){
+  ls_plot_series[[outcome_i]]  <- ds %>%
     prep_data_plot_1(
-      set_sex        = c("Males","Females")
-      ,set_area      = c("Canada", province_i)
-      ,set_age_group = c("20-34", "+1")
-    ) %>%
-    make_plot_1(
-      measure = "rate"
-    ) %>%
+      dim_horizontal  = "hmo_total"
+      ,dim_vertical   = "caffeine"
+      ,dim_color      = outcome_i
+    ) %>% 
+    make_plot_1() %>% 
     print_plot_1(
-      path_output_folder = path_target
-      # options added through `...` into the jpeg() function
-      ,width   = 900
-      ,height  = 500
-      ,units   = "px"
-      ,quality = 100
-      ,res     = 200
+      path_output_folder = path_target #  where images will be printed
+      # ,prefex            = "1600-900"
+      # ,graph_name        = "take1" # `auto` by default
+      # options added through `...` into the jpeg() function   
+      ,width   = 1600
+      ,height  = 900
+      ,units   = "px" # "px" - pixels,  "in" - inches , "cm" - centimiters
+      ,quality = 100  # percent
+      ,res     = 200  # resolution, dots per inch
     )
 }
 saveRDS(ls_plot_series, paste0(path_target,"ls_plots.rds") )
 
 
 # ---- phase-6-place_plot ---------------------------------
-l_support <- readRDS("./analysis/scenario-3/prints/series_1/ls_plots.rds")
-l_support[["British Columbia"]]$path_plot
-l_support[["British Columbia"]]$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
+ls_plot_series <- readRDS("./analysis/prep-plot-print/demo-2-series-B/ls_plots.rds")
+ls_plot_series[["atopy_1y"]]$path_plot
+ls_plot_series[["atopy_1y"]]$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
 
 # ---- publish ---------------------------------------
 # This chunk will publish the summative report
-path_publish_report_1 <- "./analysis/scenario-3/scenario-3-ccdss.Rmd"
+path_publish_report_1 <- "./analysis/prep-plot-print/prep-plot-print.Rmd"
 # path_publish_report_2 <- "./reports/*/report_2.Rmd"
 allReports <- c(
   path_publish_report_1
@@ -627,14 +645,12 @@ for( pathFile in pathFilesToBuild ) {
 readr::write_csv(ds, path_save)
 ds %>% saveRDS( gsub(".csv$",".rds",path_save) )
 
-
-
 # phase 0 - build the plot
 # phase 1 - build the function
-# phase 2 - isolate prep step
-# phase 3 - isolate print step
-# phase 4 - Serialize
-# phase 6 - place into the canvas
+# phase 2 - isolate the prep step
+# phase 3 - develop the print step
+# phase 4 - serialize application
+# phase 6 - place onto the canvas
   
 
 

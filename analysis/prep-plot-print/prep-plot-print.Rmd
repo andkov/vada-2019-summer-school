@@ -1,6 +1,7 @@
 ---
-title: "Graphing p4:"
+title: "`prep + plot + print` Technique for Reproducible Graphing"
 date: "Date: `r Sys.Date()`"
+author: "Andriy Koval"
 output: 
 # radix::radix_article: # radix is a newer alternative that has some advantages over `html_document`.
   html_document: 
@@ -15,17 +16,31 @@ output:
 
 # overview
 
-This document narrates the demonstration of the `(prep + plot + print) + place` technique using the data from ... .
+This document narrates the demonstration of the `(prep + plot + print) + place` technique using the data from VADA 2019 Summer School Data Challenge. See  [github.com/andkov/vada-2019-summer-school](https://github.com/andkov/vada-2019-summer-school) repository for reproducible scripts. 
 
 We will proceed in the following sequence of phases:
 
 - PHASE 0 - explore the data
 - PHASE 1 - build the plot
 - PHASE 2 - build the `plot` function
-- PHASE 3 - isolate the `prep` step
-- PHASE 4 - isolate the `print` step
+- PHASE 3 - split into `prep` and `plot` functions
+- PHASE 4 - add the `print` function
 - PHASE 5 - serialize graph production
 - PHASE 6 - how to `place` graphs onto the canvas
+
+## mindset
+
+Data scientists describe the ultimate reality about data using various dialets of expression. Each translation has its benefits and disadvantages. We need them all to tell a good story.    
+  
+![dialets_data][dialects_data]
+
+No one language is better than the other. Each allows for different shades of distinction in model specification. 
+
+![dialets_model][dialects_model]
+
+[dialects_data]:../../libs/images/dialects/data-expression.PNG 
+[dialects_model]:../../libs/images/dialects/model-expression.PNG 
+
 
 
 <!--  Set the working directory to the repository's base directory; this assumes the report is nested inside of two directories.-->
@@ -52,103 +67,127 @@ opts_chunk$set(
 
 echo_chunks    <- TRUE #Toggle for debugging.
 message_chunks <- FALSE #Toggle for debugging.
+warning_chunks <- FALSE
 options(width=100) #So the output is 25% wider than the default.
-read_chunk("./analysis/.../rfile.R") #This allows knitr to call chunks tagged in the underlying *.R file.
+read_chunk("./analysis/prep-plot-print/prep-plot-print.R") #This allows knitr to call chunks tagged in the underlying *.R file.
 ```
+
 # set the scene
 
 ## load packages
 <!-- Load packages, or at least verify they're available on the local machine.  Suppress the output when loading packages. --> 
-```{r load-packages, echo=echo_chunks, message=message_chunks}
+```{r load-packages, echo=echo_chunks,warning=warning_chunks, message=message_chunks}
 ```
 ## load sources
 <!-- Load 'sourced' R files.  Suppress the output when loading sources. --> 
-```{r load-sources, echo=echo_chunks, message=message_chunks}
+```{r load-sources, echo=echo_chunks,warning=warning_chunks, message=message_chunks}
 ```
 ## declare globals
 <!-- Load any global functions and variables declared in the R file.  Suppress the output. --> 
-```{r declare-globals, echo=echo_chunks, results='show', message=message_chunks}
+```{r declare-globals, echo=echo_chunks, results='show', warning=warning_chunks,message=message_chunks}
 ```
 
 <!-- Declare any global functions specific to a Rmd output.  Suppress the output. -->
-```{r rmd-specific, echo=echo_chunks, message=message_chunks}
+```{r rmd-specific, echo=echo_chunks, warning=warning_chunks,message=message_chunks}
 # Put presentation-specific code in here.  It doesn't call a chunk in the codebehind file.
 #   It should be rare (and used cautiously), but sometimes it makes sense to include code in Rmd 
 #   that doesn't live in the codebehind R file.
 ```
 ## load data
 <!-- Load the datasets.   -->
-```{r load-data, echo=echo_chunks, results='show', message=message_chunks}
+```{r load-data, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
 
 # PHASE 0 - explore 
 
 ## tweak data
 <!-- Tweak the datasets.   -->
-```{r tweak-data, echo=echo_chunks, results='show', message=message_chunks}
+```{r tweak-data, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
 ## inspect-1 raw
-```{r inspect-data-1, echo=echo_chunks, results='show', message=message_chunks}
+```{r inspect-data-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
 ## declare components
-```{r declare-components, echo=echo_chunks, results='show', message=message_chunks}
+```{r declare-components, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
 ## inspect-2 categorical
-```{r inspect-data-2, echo=echo_chunks, results='asis', message=FALSE}
+```{r inspect-data-2, echo=echo_chunks, results='asis',warning=warning_chunks, message=FALSE, fig.width=11, fig.height=12,out.width="960px"}
 ```
 
 ## inspect-3 continuous
-```{r inspect-data-3, echo=echo_chunks, results='asis', message=message_chunks}
+```{r inspect-data-3, echo=echo_chunks, results='asis',warning=warning_chunks, message=message_chunks,fig.width=11, fig.height=7,out.width="960px"}
 ```
 
 # PHASE 1 - graph
 
 ## sketch the space
-```{r phase-1-graph, echo=echo_chunks, results='show', message=message_chunks}
+```{r phase-1-graph, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
 
 ## graph-1 basic
-```{r phase-1-graph-1, echo=echo_chunks, results='show', message=message_chunks,out.width="960px"}
+```{r phase-1-graph-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
 ```
 
 # PHASE 2 - make plot
 
-```{r phase-2-make_plot, echo=echo_chunks, results='show', message=message_chunks,fig.width=11, fig.height=7,out.width="960px"}
+```{r phase-2-make_plot, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,fig.width=11, fig.height=7,out.width="960px"}
 ```
 
-```{r phase-2-make_plot-1, echo=echo_chunks, results='show', message=message_chunks,fig.width=11, fig.height=17,out.width="960px"}
+```{r phase-2-make_plot-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,fig.width=11, fig.height=7,out.width="960px"}
+```
+
+## applications
+```{r phase-2-make_plot-2, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,fig.width=11, fig.height=7,out.width="960px"}
 ```
 
 # PHASE 3 - prep data
 
-```{r  phase-3-prep_data-1, echo=echo_chunks, results='show', message=message_chunks,out.width="960px"}
+```{r  phase-3-prep_data, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
 ```
 
 # PHASE 4 - print plot
 
-```{r phase-4-print_plot, echo=echo_chunks, results='show', message=message_chunks,out.width="960px"}
+```{r phase-4-print_plot, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
 ```
 
-```{r phase-4-print_plot-1, echo=echo_chunks, results='show', message=message_chunks,out.width="960px"}
+To remind us of the dimensions in typical formats: 
+```{r dimensions, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
 ```
+
+```{r phase-4-print_plot-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
+```
+
+```{r phase-4-print_plot-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
+```
+
 
 # PHASE 5 - serialize
 
-```{r phase-5-serialize, echo=echo_chunks, results='show', message=message_chunks,out.width="960px"}
+```{r phase-5-serialize, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
+```
+
+```{r phase-5-serialize-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
 ```
 
 # PHASE 6 - place plot
 
-```{r phase-6-place_plot, echo=echo_chunks, results='show', message=message_chunks,out.width="960px"}
+```{r phase-6-place_plot, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks,out.width="960px"}
 
 ```
 
 # concluding remarks
 
-Please note that this is not a "method" or a "framework", but merely an example of how to organize a particular comparison. 
+ - This essay is more about making graphs than about analyzing data
+ - This essay is more about demonstrating a technique than about prescribing a framework.
+ - Frameworks are like toothbrushes: everyone’s got them, but no-one wants to use anyone else’s. [source](https://twitter.com/trishgreenhalgh/status/891674763285942272)
+
 
 # future direction
 
+- Improve the appearance of the graph
+  - Hollow `geom_point` to better see the pattern
+- Wrapper function to streamline looping through outcomes
+- Incorporate faceting (wrap, grid) into the function sequence
 
 session information
 ===========================================================================
