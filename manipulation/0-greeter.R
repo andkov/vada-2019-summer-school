@@ -43,7 +43,7 @@ for(i in seq_along(csv_input_paths) ){
   dto[["date"]][i] <- paste(i_year,i_month,i_day, sep="-") # to make ISO compliant
   dto[["variable_set"]][i] <- gsub("_variables$","", dto[["variable_set"]][i]) %>% tolower()
 }
-dto %>% lapply(glimpse)
+dto %>% lapply(class)
 # populate dto
 dto[["data"]] <- list() 
 dto[["meta"]] <- list() 
@@ -71,9 +71,7 @@ dto %>% pryr::object_size()
 dto %>% saveRDS("./data-unshared/derived/0-greeted.rds")
 # ---- publish ---------------------------------
 
-path_report_1 <- "./analysis/0-greeter/0-greeter-table.Rmd"
-path_report_2 <- "./analysis/0-greeter/0-greeter-pivot.Rmd"
-path_report_3 <- "./analysis/0-greeter/0-greeter.Rmd"
+path_report_1 <- "./analysis/0-greeter/0-greeter.Rmd"
 
 # allReports <- c(path_report_1,path_report_2, path_report_3)
 # allReports <- c(path_report_3)
