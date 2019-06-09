@@ -3,7 +3,7 @@
 A repository to accompany selected applied sessions of the [2019 VADA Program Summer School](http://vada.cs.umanitoba.ca/program/program/summer-school/summer-school-2019/), June 10-14, at the George and Fay Yee Centre for Healthcare Innovation, Winnipeg, Manitoba. [Full program](libs/materials/Full-Week-Schedule-and-Descriptions.pdf) 
 
 # Analytic Products
- - [0-greeter][greeter] - organize the input data sources
+
  - [technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique
 
 [greeter]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/0-greeter/0-greeter.html
