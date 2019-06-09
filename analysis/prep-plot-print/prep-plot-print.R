@@ -56,7 +56,7 @@ var_covariates_risk <- c(
   ,"ga_wks_cat"    # (Cat) Gestational Age categories: 1)34-36, 2)37-38, 3)39-40, 4=41+
   ,"sex"	         # (Bin) Infant sex (0=Female, 1=Male) - from CHILD profile
   ,"older_sibs3"	 # (Cat) Older siblings: 0, 1, 2+
-  ,"lact_season"   # (Cat) Season of Milk Collection: (1)Winter:Dec-Feb, (2)Spring:Mar-May, (3)Summer:Jun-Aug, (4)Fall:Sept-Nov
+  ,"lact_season"   # (Cat) Season of Milk Collection: (W):Dec-Feb, (Spring):Mar-May, (Summer):Jun-Aug, (Fall):Sept-Nov
   ,"mom_wtclass3"	 # (Cat) Moms weight class From mom_wtclass_best
   ,"prudent"	     # (Num) Prudent Diet
 )

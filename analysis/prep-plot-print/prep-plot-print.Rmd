@@ -31,11 +31,11 @@ We will proceed in the following sequence of phases:
 
 Data scientists describe the ultimate reality about data using various dialets of expression. Each translation has its benefits and disadvantages. We need them all to tell a good story.    
   
-![dialets_data][dialects_data]
+![][dialects_data]
 
 No one language is better than the other. Each allows for different shades of distinction in model specification. 
 
-![dialets_model][dialects_model]
+![][dialects_model]
 
 [dialects_data]:../../libs/images/dialects/data-expression.PNG 
 [dialects_model]:../../libs/images/dialects/model-expression.PNG 
@@ -103,17 +103,17 @@ read_chunk("./analysis/prep-plot-print/prep-plot-print.R") #This allows knitr to
 <!-- Tweak the datasets.   -->
 ```{r tweak-data, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
-## inspect-1 raw
+## inspect-1 summaries
 ```{r inspect-data-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
 ## declare components
 ```{r declare-components, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
-## inspect-2 categorical
+## inspect-2 univariate
 ```{r inspect-data-2, echo=echo_chunks, results='asis',warning=warning_chunks, message=FALSE, fig.width=11, fig.height=12,out.width="960px"}
 ```
 
-## inspect-3 continuous
+## inspect-3 bivariate
 ```{r inspect-data-3, echo=echo_chunks, results='asis',warning=warning_chunks, message=message_chunks,fig.width=11, fig.height=7,out.width="960px"}
 ```
 
