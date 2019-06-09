@@ -6,9 +6,7 @@ output:
   html_document: 
     keep_md: no
     toc: yes
-    toc_float: 
-      collapsed: true
-      smooth_scroll: true
+    toc_float: no
     highlight: haddock
     theme: simplex
 ---

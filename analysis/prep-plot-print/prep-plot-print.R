@@ -87,7 +87,7 @@ ls_ds <- list(
   ,dto$data$feeding             %>% dplyr::select(c("ids",var_feeding))
   ,dto$data$milk_components     %>% dplyr::select(c("ids",var_milk_components))
 )
-lapply(ls_ds, names)
+
 # combine list of ds into a single ds
 ds <- base::Reduce(dplyr::full_join, ls_ds)
 # to creat a new varaible
@@ -119,7 +119,7 @@ ds <- ds %>%
 # to update the definition of the group set:
 var_covariates_risk <- c(var_covariates_risk,"pets_home_12m")
 
-# to have a quick reference for the variables in focus (and their sources)
+# for a quick reference for the variables in focus (and their sources)
 focal_variables <- list(
   "outcome"     = var_clinical_outcomes_1y
   ,"covariate"  = var_covariates_risk
@@ -127,51 +127,23 @@ focal_variables <- list(
   ,"feeding"    = var_feeding
   ,"milk"       = var_milk_components
 )
+focal_variables 
 
 # to view the new categorical variable
 ds %>% group_by(pets_home_12m) %>% dplyr::count()
 
 # ---- inspect-data-1 ----------------------------
-ds %>% dplyr::glimpse()
-ds %>% explore::describe()
+# to view basic info for each set of focal variables
+for(variable_set_i in names(focal_variables)){
+  cat("\n ### - ", variable_set_i, " - ###\n\n")
+  ds %>% 
+    dplyr::select_(.dots = focal_variables[[variable_set_i]]) %>% 
+    explore::describe() %>% 
+    print()
+}
+
 # ---- inspect-data-2 ----------------------------
 ds %>% explore::explore_all(ncol = 5 )
-
-# ----- temp-explore ---------------------
-# ds %>% dplyr::select_(.dots = var_clinical_outcomes_1y) %>% 
-#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-# 
-# # 2
-# outcomes_covariates <- c(
-#   var_clinical_outcomes_1y
-#   ,setdiff(var_covariates_risk,c("cat_pn","dog_pn")) 
-#   ,"pets_home_12m"
-# )
-# ds %>% 
-#   dplyr::select_(.dots = outcomes_covariates) %>% 
-#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-# 
-# # 3
-# milk_feeding_extra <- c(
-#   var_milk_components, var_feeding, var_extra, "atopy_1y"
-# )
-# ds %>% 
-#   dplyr::select_(.dots = milk_feeding_extra) %>% 
-#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-# 
-# ds1 <- ds %>% 
-#   dplyr::select(
-#     hmo_diversity   
-#     ,prudent
-#     ,bf_duration_imp
-#     ,dzwgt_0to12m
-#     ,hmo_total
-#     ,atopy_1y   
-#     ,pets_home_12m   
-#     ,older_sibs3 
-#   ) %>% 
-#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
 # ---- inspect-data-3 ----------------------------
 # to view the outcomes against ONLY continuous variables
 ds %>%
@@ -186,13 +158,10 @@ ds %>%
     ,"hmo_diversity"	 # milk    # HMO Diversity
   )) %>%
   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
-
 # ---- declare-components ----------------------
 
 
 # ---- phase-1-graph -------------------
-
 # Let us sketch a graph that would map three dimensions:
 # (x)     - horizontal - continuous
 # (y)     - vertical   - continuous
@@ -229,9 +198,8 @@ make_plot_1_basic <- function(
         ,color = atopy_1y 
       )
     ) +
-    geom_point()+
+    geom_point(size = 3)+
     theme_minimal()
-
   return(g_out)  
 }
 # how to use:
@@ -254,25 +222,25 @@ make_plot_1_packed <- function(
   d
   ,dim_horizontal
   ,dim_vertical  
-  ,dim_color
-  ,palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02")
+  ,dim_fill
+  ,palette_custom = c("TRUE"="red", "FALSE"=NA) 
 ){
   # to declare values for testing and development (within this function)
   # d <- ds 
   # dim_horizontal = "hmo_total"
   # dim_vertical   = "wtg_velocity"
-  # dim_color      = "atopy_1y"
+  # dim_fill      = "atopy_1y"
   # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02")
   
   # data prep step
   d1 <- d %>% 
-    tidyr::drop_na(.dots = dim_color) # to avoid clutter in labels
+    tidyr::drop_na(.dots = dim_fill) # to avoid clutter in labels
   custom_label_title = paste0(
-    "(",dim_color,") across (", dim_horizontal,") and (",dim_vertical,")" 
+    "(",dim_fill,") across (", dim_horizontal,") and (",dim_vertical,")" 
   )
   custom_label_x     = toupper(dim_horizontal)
   custom_label_y     = toupper(dim_vertical)
-  custom_label_color = toupper(dim_color)
+  custom_label_fill  = toupper(dim_fill)
   
   # plotting prep step
   # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
@@ -283,17 +251,17 @@ make_plot_1_packed <- function(
       aes_string(
         x      = dim_horizontal # continuous  # hmo_total
         ,y     = dim_vertical   # continuous  # wtg_velocity
-        ,color = dim_color      # categorical # atopy_1y 
-      )
+        ,fill  = dim_fill      # categorical # atopy_1y 
+        )
     ) +
-    geom_point()+
-    scale_color_manual(values = palette_custom)+
+    geom_point(shape = 21, alpha = .4, size= 3 )+
+    scale_fill_manual(values = palette_custom)+
     theme_minimal()+
     labs(
       title  = custom_label_title
       ,x     = custom_label_x
       ,y     = custom_label_y
-      ,color = custom_label_color 
+      ,fill = custom_label_fill 
     )
     # g_out # for viewing while developing
   return(g_out)  
@@ -303,8 +271,8 @@ g <- ds %>%
   make_plot_1_packed(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    # ,dim_color      = "atopy_1y"
-    ,dim_color      = "ow_1y"
+    # ,dim_fill      = "atopy_1y"
+    ,dim_fill      = "ow_1y"
   )# or:
 # g <- ds %>% make_plot_1_packed("hmo_total","wtg_velocity","wz_recurrent_1y")
 g
@@ -322,13 +290,13 @@ g <- ds %>%
     dim_horizontal  = "prudent"
     ,dim_vertical   = "wtg_velocity"
     # ,dim_vertical   = "ebf_duration"
-    # ,dim_color      = "atopy_1y"
-    # ,dim_color      = "wz_recurrent_1y"
-    ,dim_color      = "rapid_wgt_0to12m"
-    # ,dim_color      = "wtclass_1y"
-    # ,dim_color      = "wtg_velocity" # will produce error
-    #http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
-    # ,palette_custom = c("1-Normal" = "#1b9e77", "2-At Risk" = "#d95f02", "3-Overweight" = "#7570b3")
+    # ,dim_fill      = "atopy_1y"
+    # ,dim_fill      = "wz_recurrent_1y"
+    # ,dim_fill      = "rapid_wgt_0to12m"
+    ,dim_fill      = "wtclass_1y" # Categorical with (3 levels)
+    # ,dim_fill      = "wtg_velocity" # will produce error
+    ,palette_custom = c("1-Normal" = "white", "2-At Risk" = "#1AFF1A", "3-Overweight" = "#4B0092")
+    # palette from https://davidmathlogic.com/colorblind/#%231AFF1A-%234B0092
   ) 
 g
 # g +  facet_grid( pets_home_12m ~ older_sibs3 )
@@ -338,28 +306,28 @@ g
 # ---- phase-3-prep_data ------------------------------
 # let us construct a new `prep_data` function that would 
 # isolate the preparatory operations from the `make_plot` function
-prep_data_plot_1 <- function(
+prep_data_1 <- function(
   d
   ,dim_horizontal
   ,dim_vertical  
-  ,dim_color
+  ,dim_fill
 ){
   # to declare values for testing and development (within this function)
   # d <- ds
   # dim_horizontal = "hmo_total"
   # dim_vertical   = "wtg_velocity"
-  # dim_color      = "atopy_1y"
+  # dim_fill      = "atopy_1y"
   # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02")
 
   # data prep step
   d1 <- d %>% 
-    tidyr::drop_na(.dots = dim_color) # to avoid clutter in labels
+    tidyr::drop_na(.dots = dim_fill) # to avoid clutter in labels
   custom_label_title = paste0(
-    "(",dim_color,") across (", dim_horizontal,") and (",dim_vertical,")" 
+    "(",dim_fill,") across (", dim_horizontal,") and (",dim_vertical,")" 
   )
   custom_label_x     = toupper(dim_horizontal)
   custom_label_y     = toupper(dim_vertical)
-  custom_label_color = toupper(dim_color)
+  custom_label_fill = toupper(dim_fill)
   
   # to store objects for passing to the `make_plot` function
   l_support <- list()
@@ -367,12 +335,12 @@ prep_data_plot_1 <- function(
   l_support[["dimension"]] <- c(
     "horizontal" = dim_horizontal
     ,"vertical"  = dim_vertical
-    ,"color"     = dim_color
+    ,"fill"      = dim_fill
   )
   l_support[["label"]] <- c(
      "x"      = custom_label_x
     ,"y"      = custom_label_y
-    ,"color"  = custom_label_color
+    ,"fill"   = custom_label_fill
     ,"title"  = custom_label_title
   )
   
@@ -383,11 +351,11 @@ prep_data_plot_1 <- function(
 }
 # how to use
 l_support <- ds %>% 
-  prep_data_plot_1(
+  prep_data_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_color      = "atopy_1y"
-    # ,dim_color      = "wtclass_1y"
+    ,dim_fill      = "atopy_1y"
+    # ,dim_fill      = "wtclass_1y"
   )
 l_support %>% print()
 
@@ -396,7 +364,7 @@ l_support %>% print()
 
 make_plot_1 <- function(
   l_support
-  ,palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
+  ,palette_custom = c("TRUE"="red", "FALSE"=NA) 
 ){
   # plotting prep step
   # palette_custom = c("TRUE"="#1B9E77", "FALSE"="#D95F02") 
@@ -407,17 +375,17 @@ make_plot_1 <- function(
       aes_string(
         x      = l_support[["dimension"]]["horizontal"] # continuous  # hmo_total
         ,y     = l_support[["dimension"]]["vertical"]   # continuous  # wtg_velocity
-        ,color = l_support[["dimension"]]["color"]      # categorical # atopy_1y 
+        ,fill = l_support[["dimension"]]["fill"]      # categorical # atopy_1y
       )
     ) +
-    geom_point()+
-    scale_color_manual(values = palette_custom)+
+    geom_point(shape = 21, alpha = .4, size= 3 )+
+    scale_fill_manual(values = palette_custom)+
     theme_minimal()+
     labs(
       title  = l_support[["label"]]["title"]    
       ,x     = l_support[["label"]]["x"]    
       ,y     = l_support[["label"]]["y"]
-      ,color = l_support[["label"]]["color"]
+      ,fill = l_support[["label"]]["fill"]
     )
   # g_out # for viewing while developing
   l_support[["graph"]]   <- g_out
@@ -426,28 +394,28 @@ make_plot_1 <- function(
 # how to use
 # to add a new element in `l_support`` that would contain the plot
 l_support <- ds %>% 
-  prep_data_plot_1(
+  prep_data_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    # ,dim_color      = "atopy_1y"
-    ,dim_color      = "wz_recurrent_1y"
+    ,dim_fill      = "atopy_1y"
+    # ,dim_fill      = "wz_recurrent_1y"
   ) %>% 
   make_plot_1()
 l_support$graph %>% print() # note that printing is a separate step
 
 # applications:
 l_support <- ds %>% 
-  prep_data_plot_1(
+  prep_data_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    # ,dim_color      = "atopy_1y"
-    # ,dim_color      = "rapid_wgt_0to12m"
-    ,dim_color      = "wtclass_1y"
-    # ,dim_color      = "wtg_velocity" # will produce error
+    # ,dim_fill      = "atopy_1y"
+    # ,dim_fill      = "rapid_wgt_0to12m"
+    ,dim_fill      = "wtclass_1y"
+    # ,dim_fill      = "wtg_velocity" # will produce error
   ) %>% 
   make_plot_1(
-    #http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
-    palette_custom = c("1-Normal" = "#1b9e77", "2-At Risk" = "#d95f02", "3-Overweight" = "#7570b3")
+    palette_custom = c("1-Normal" = "white", "2-At Risk" = "#1AFF1A", "3-Overweight" = "#4B0092")
+    # palette from https://davidmathlogic.com/colorblind/#%231AFF1A-%234B0092
   )
 l_support$graph %>% print()
 
@@ -497,10 +465,10 @@ print_plot_1 <- function(
 }
 # how to use
 l_support <- ds %>% 
-  prep_data_plot_1(
+  prep_data_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_color      = "atopy_1y"
+    ,dim_fill      = "atopy_1y"
   ) %>% 
   make_plot_1() %>% 
   print_plot_1(
@@ -557,18 +525,18 @@ outcomes_binary <- c(
 
 
 # for each selected outcome create plot_1 in this folder
-path_target <- "./analysis/prep-plot-print/demo-2-series-A/" # where images will be printed
+path_target_series_A <- "./analysis/prep-plot-print/demo-2-series-A/" # where images will be printed
 ls_plot_series <- list() # to capture the collection of graphs and their file paths 
 for(outcome_i in outcomes_binary){
   ls_plot_series[[outcome_i]]  <- ds %>%
-    prep_data_plot_1(
+    prep_data_1(
       dim_horizontal  = "hmo_total"
       ,dim_vertical   = "wtg_velocity"
-      ,dim_color      = outcome_i
+      ,dim_fill      = outcome_i
     ) %>% 
     make_plot_1() %>% 
     print_plot_1(
-      path_output_folder = path_target #  where images will be printed
+      path_output_folder = path_target_series_A #  where images will be printed
       # ,prefex            = "1600-900"
       # ,graph_name        = "take1" # `auto` by default
       # options added through `...` into the jpeg() function   
@@ -579,25 +547,25 @@ for(outcome_i in outcomes_binary){
       ,res     = 200  # resolution, dots per inch
     )
 }
-saveRDS(ls_plot_series, paste0(path_target,"ls_plots.rds") )
+saveRDS(ls_plot_series, paste0(path_target_series_A,"ls_plots.rds") )
 
 
 # ---- phase-5-serialize-1 ---------------------------------
 
 # GRAPH SERIES B
 # for each selected outcome create plot_1 in this folder
-path_target <- "./analysis/prep-plot-print/demo-2-series-B/" # where images will be printed
+path_target_series_B <- "./analysis/prep-plot-print/demo-2-series-B/" # where images will be printed
 ls_plot_series <- list() # to capture the collection of graphs and their file paths 
 for(outcome_i in outcomes_binary){
   ls_plot_series[[outcome_i]]  <- ds %>%
-    prep_data_plot_1(
+    prep_data_1(
       dim_horizontal  = "hmo_total"
       ,dim_vertical   = "caffeine"
-      ,dim_color      = outcome_i
+      ,dim_fill      = outcome_i
     ) %>% 
     make_plot_1() %>% 
     print_plot_1(
-      path_output_folder = path_target #  where images will be printed
+      path_output_folder = path_target_series_B #  where images will be printed
       # ,prefex            = "1600-900"
       # ,graph_name        = "take1" # `auto` by default
       # options added through `...` into the jpeg() function   
@@ -608,7 +576,7 @@ for(outcome_i in outcomes_binary){
       ,res     = 200  # resolution, dots per inch
     )
 }
-saveRDS(ls_plot_series, paste0(path_target,"ls_plots.rds") )
+saveRDS(ls_plot_series, paste0(path_target_series_B,"ls_plots.rds") )
 
 
 # ---- phase-6-place_plot ---------------------------------
@@ -619,9 +587,10 @@ ls_plot_series[["atopy_1y"]]$path_plot %>% jpeg::readJPEG() %>% grid::grid.raste
 # ---- publish ---------------------------------------
 # This chunk will publish the summative report
 path_publish_report_1 <- "./analysis/prep-plot-print/prep-plot-print.Rmd"
+path_publish_report_2 <- "./analysis/prep-plot-print/prep-plot-print_nofloat.Rmd"
 # path_publish_report_2 <- "./reports/*/report_2.Rmd"
 allReports <- c(
-  path_publish_report_1
+  path_publish_report_1,path_publish_report_2
 ) # add more reports, in necessary
 pathFilesToBuild <- c(allReports) # line up report(s) to render
 testit::assert("The knitr Rmd files should exist.", base::file.exists(pathFilesToBuild))
@@ -629,7 +598,7 @@ testit::assert("The knitr Rmd files should exist.", base::file.exists(pathFilesT
 for( pathFile in pathFilesToBuild ) {
   rmarkdown::render(input = pathFile,
                     output_format=c(
-                      "html_document"   
+                      "html_document"
                       # "pdf_document"
                       # ,"md_document"
                       # "word_document" 
@@ -652,5 +621,11 @@ ds %>% saveRDS( gsub(".csv$",".rds",path_save) )
 # phase 4 - serialize application
 # phase 6 - place onto the canvas
   
-
+# potential color picks
+# ,palette_custom = c("TRUE"="red", "FALSE"="white") # deep purple
+# ,palette_custom = c("TRUE"="#4B0092", "FALSE"="white") # deep purple
+# ,palette_custom = c("TRUE"="#0C7BDC", "FALSE"="#FFC20A") # blue, yellow
+# ,palette_custom = c("TRUE"="#D35FB7", "FALSE"="#FEFE62") # dar pink, light yellow
+# ,palette_custom = c("TRUE"="#40B0A6", "FALSE"="#E1BE6A") # light brown, teal
+# ,palette_custom = c("TRUE"="#4B0092", "FALSE"="#1AFF1A") # deep purple, acid green
 
