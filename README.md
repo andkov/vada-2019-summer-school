@@ -4,7 +4,7 @@ A repository to accompany selected applied sessions of the [2019 VADA Program Su
 
 # Analytic Products
 
- - [technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique
+ - [`prep-plot-print` technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique
 
 [demo_complete]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/prep-plot-print/prep-plot-print.html
 
