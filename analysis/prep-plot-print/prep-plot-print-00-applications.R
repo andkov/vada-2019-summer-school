@@ -128,7 +128,6 @@ prep_data_1 <- function(
 # l_support %>% print()
 
 # now we can pass this curated object `l_support` to graphing function
-
 make_plot_1 <- function(
   l_support
   ,palette_custom = c("TRUE"="red", "FALSE"=NA) 
@@ -291,40 +290,8 @@ focal_variables <- list(
 # to view the new categorical variable
 ds %>% group_by(pets_home_12m) %>% dplyr::count()
 
-# ---- inspect-data-1 ----------------------------
-# to view basic info for each set of focal variables
-# for(variable_set_i in names(focal_variables)){
-#   cat("\n ### - ", variable_set_i, " - ###\n\n")
-#   ds %>% 
-#     dplyr::select_(.dots = focal_variables[[variable_set_i]]) %>% 
-#     explore::describe() %>% 
-#     print()
-# }
 
-# ---- inspect-data-2 ----------------------------
-# ds %>% explore::explore_all(ncol = 5 )
-# ---- inspect-data-3 ----------------------------
-# to view the outcomes against ONLY continuous variables
-# ds %>%
-#   dplyr::select_(.dots = c(
-#     "atopy_1y"         # outcome # Atopy at 1y (by SPT - reaction to any allergen)
-#     ,"wtg_velocity"    # outcome # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
-#     ,"ga_wks"          # covar   # Gestational Age in weeks
-#     ,"prudent"	       # covar   # Prudent Diet
-#     ,"bf_duration_imp" # feed    # Breastfeeding Duration in Months (implied)
-#     ,"ebf_duration"	   # feed    # Duration of Exclusive Breastfeeding (Months)
-#     ,"hmo_total"	     # milk    # Sum of all  HMOs
-#     ,"hmo_diversity"	 # milk    # HMO Diversity
-#   )) %>%
-#   GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-
-# ---- sketch-the-graph -------------------
-# Let us sketch a graph that would map three dimensions:
-# (x)     - horizontal - continuous
-# (y)     - vertical   - continuous
-# (color) - color      - discrete
-
-# ----- example-1-minimal --------------------------------
+# ----- example-1 --------------------------------
 # print `focal_variables` to refernce the spelling of variables
 focal_variables %>% print()
 # how to use
@@ -338,7 +305,7 @@ l_support <- ds %>%
 # to display the plot in the 
 l_support$graph 
 
-# ----- example-2-extended ------------------------
+# ----- example-2 ------------------------
 # to remind yourself what variables available:
 focal_variables %>% print()
 
@@ -405,7 +372,7 @@ l_support %>%
     ,res     = 200  # resolution, dots per inch
     # ,res     = 100 
   )
-# ---- dimensions ----------------------
+
 # canvas size guide ( portrait orientation )
 
 # Size           Width x Height (mm) Width x Height (in)  Aspect Ratio
@@ -441,23 +408,4 @@ for( pathFile in pathFilesToBuild ) {
 
 
 
-# ---- save-to-disk --------------------- 
-# save the created and groomed dataset for further use by subsequent reports
-readr::write_csv(ds, path_save)
-ds %>% saveRDS( gsub(".csv$",".rds",path_save) )
-
-# phase 0 - build the plot
-# phase 1 - build the function
-# phase 2 - isolate the prep step
-# phase 3 - develop the print step
-# phase 4 - serialize application
-# phase 6 - place onto the canvas
-  
-# potential color picks
-# ,palette_custom = c("TRUE"="red", "FALSE"="white") # deep purple
-# ,palette_custom = c("TRUE"="#4B0092", "FALSE"="white") # deep purple
-# ,palette_custom = c("TRUE"="#0C7BDC", "FALSE"="#FFC20A") # blue, yellow
-# ,palette_custom = c("TRUE"="#D35FB7", "FALSE"="#FEFE62") # dar pink, light yellow
-# ,palette_custom = c("TRUE"="#40B0A6", "FALSE"="#E1BE6A") # light brown, teal
-# ,palette_custom = c("TRUE"="#4B0092", "FALSE"="#1AFF1A") # deep purple, acid green
 

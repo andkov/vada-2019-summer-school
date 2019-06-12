@@ -1,11 +1,8 @@
 Contents of `./data-unshared/` Directory
 =========
-Since files in this directory are not staged/committed, it's tough to communicate with collaborators what the files should look like on their computers.  Try to keep this list updated.
 
-### Files in `./data-unshared/raw/`
-* psychopathy-2014-03-20.csv (formerly called `Psychopathy 20March2014.csv`)
-* heart_attack-2014-02-03.csv (formerly called `HeartAttack 03-02-14 Final.csv`)
-
-### Files in `./data-unshared/derived/`
-* psychopathy.rds
-* heart_attack.rds
+After you clone the repository, please create two new subfolder here:  
+ - `./data-unshared/raw/`  to store the original files, not altered manually
+ - `./data-unshared/derived/` to store versions of data derived from raw by scripts only (no manual transformations!!)   
+ 
+ 

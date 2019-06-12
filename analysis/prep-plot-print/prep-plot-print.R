@@ -20,22 +20,14 @@ base::source("./scripts/common-functions.R") # used in multiple reports
 base::source("./scripts/graphing/graph-presets.R") # fonts, colors, themes 
 
 # ---- declare-globals ---------------------------------------------------------
+# path to the data transfer object (dto) produced by the greeter script
 path_file_input <- "./data-unshared/derived/0-greeted.rds"
 html_flip <- FALSE
 
-# ---- rmd-specific ----------------------------
-
-# ---- load-data ---------------------------------------------------------------
-# see ./data-unshared/contents.md for origin of the data
-dto <- readRDS(path_file_input)
-dto %>% pryr::object_size(); dto %>% class(); dto %>% names()
-
-# ---- tweak-data ------------------------------
-
-# to select target variables from each source 
+# to narrow the scope of our vistion to manageable set
 # 1 - Clinical Outcomes at year 1
 var_clinical_outcomes_1y <- c(
-   "atopy_1y"           # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
+  "atopy_1y"           # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
   ,"wz_recurrent_1y"    # (Bin)  Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
   ,"atopy_1y"           # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)	Binary
   ,"atopy_food_1y"      # (Bin)  Sensitization to food allergen at 1y by SPT	Binary
@@ -78,6 +70,16 @@ var_milk_components <- c(
   "hmo_total"	       # (Num) Sum of all  HMOs
   ,"hmo_diversity"	 # (Num) HMO Diversity
 )
+# ---- rmd-specific ----------------------------
+# functions local to the related rmd go here
+
+# ---- load-data ---------------------------------------------------------------
+# see ./data-unshared/contents.md for origin of the data
+dto <- readRDS(path_file_input)
+dto %>% pryr::object_size(); dto %>% class(); dto %>% names()
+
+# ---- tweak-data ------------------------------
+
 
 # assemble a focal ds of the project (we dont' want to many variables distracting us)
 ls_ds <- list(
@@ -148,19 +150,16 @@ ds %>% explore::explore_all(ncol = 5 )
 # to view the outcomes against ONLY continuous variables
 ds %>%
   dplyr::select_(.dots = c(
-    "atopy_1y"         # outcome # Atopy at 1y (by SPT - reaction to any allergen)
-    ,"wtg_velocity"    # outcome # Weight gain velocity from 0 to 12m (change in WHO weight z-score)
-    ,"ga_wks"          # covar   # Gestational Age in weeks
-    ,"prudent"	       # covar   # Prudent Diet
-    ,"bf_duration_imp" # feed    # Breastfeeding Duration in Months (implied)
-    ,"ebf_duration"	   # feed    # Duration of Exclusive Breastfeeding (Months)
-    ,"hmo_total"	     # milk    # Sum of all  HMOs
-    ,"hmo_diversity"	 # milk    # HMO Diversity
+    "atopy_1y"         # outcome - Atopy at 1y (by SPT - reaction to any allergen)
+    ,"wtg_velocity"    # outcome - Weight gain velocity from 0 to 12m (change in WHO weight z-score)
+    ,"ga_wks"          # covar   - Gestational Age in weeks
+    ,"prudent"	       # covar   - Prudent Diet
+    ,"bf_duration_imp" # feed    - Breastfeeding Duration in Months (implied)
+    ,"ebf_duration"	   # feed    - Duration of Exclusive Breastfeeding (Months)
+    ,"hmo_total"       # milk    - Sum of all  HMOs
+    ,"hmo_diversity"   # milk    - HMO Diversity
   )) %>%
-  GGally::ggpairs(mapping = aes(fill = atopy_1y))+theme_minimal()
-# ---- declare-components ----------------------
-
-
+  GGally::ggpairs(mapping = aes(fill = atopy_1y)) + theme_minimal()
 # ---- phase-1-graph -------------------
 # Let us sketch a graph that would map three dimensions:
 # (x)     - horizontal - continuous
@@ -168,6 +167,7 @@ ds %>%
 # (color) - color      - discrete
 
 # ---- phase-1-graph-1 -------------------
+# let us create a scatter plot between `hmo_total` and `wtg_velocity`,points colored by `atopy_1y`
 # to create a ggplot2 object
 g1 <- ds %>%
   # tidyr::drop_na(.dots = c("older_sibs3")) %>% # explore
@@ -186,6 +186,7 @@ g1
 
 # ---- phase-2-make_plot --------------------------
 # now let us re-express this plot as a custom function
+# first, let us create a most basic function that takes no arguments and produces a graph
 make_plot_1_basic <- function(
   d
 ){
@@ -261,7 +262,7 @@ make_plot_1_packed <- function(
       title  = custom_label_title
       ,x     = custom_label_x
       ,y     = custom_label_y
-      ,fill = custom_label_fill 
+      ,fill  = custom_label_fill 
     )
     # g_out # for viewing while developing
   return(g_out)  
@@ -272,7 +273,7 @@ g <- ds %>%
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
     # ,dim_fill      = "atopy_1y"
-    ,dim_fill      = "ow_1y"
+    ,dim_fill       = "ow_1y"
   )# or:
 # g <- ds %>% make_plot_1_packed("hmo_total","wtg_velocity","wz_recurrent_1y")
 g
@@ -293,7 +294,7 @@ g <- ds %>%
     # ,dim_fill      = "atopy_1y"
     # ,dim_fill      = "wz_recurrent_1y"
     # ,dim_fill      = "rapid_wgt_0to12m"
-    ,dim_fill      = "wtclass_1y" # Categorical with (3 levels)
+    ,dim_fill       = "wtclass_1y" # Categorical with (3 levels)
     # ,dim_fill      = "wtg_velocity" # will produce error
     ,palette_custom = c("1-Normal" = "white", "2-At Risk" = "#1AFF1A", "3-Overweight" = "#4B0092")
     # palette from https://davidmathlogic.com/colorblind/#%231AFF1A-%234B0092
@@ -327,7 +328,7 @@ prep_data_1 <- function(
   )
   custom_label_x     = toupper(dim_horizontal)
   custom_label_y     = toupper(dim_vertical)
-  custom_label_fill = toupper(dim_fill)
+  custom_label_fill  = toupper(dim_fill)
   
   # to store objects for passing to the `make_plot` function
   l_support <- list()
@@ -354,7 +355,7 @@ l_support <- ds %>%
   prep_data_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_fill      = "atopy_1y"
+    ,dim_fill       = "atopy_1y"
     # ,dim_fill      = "wtclass_1y"
   )
 l_support %>% print()
@@ -397,7 +398,7 @@ l_support <- ds %>%
   prep_data_1(
     dim_horizontal  = "hmo_total"
     ,dim_vertical   = "wtg_velocity"
-    ,dim_fill      = "atopy_1y"
+    ,dim_fill       = "atopy_1y"
     # ,dim_fill      = "wz_recurrent_1y"
   ) %>% 
   make_plot_1()
@@ -410,7 +411,7 @@ l_support <- ds %>%
     ,dim_vertical   = "wtg_velocity"
     # ,dim_fill      = "atopy_1y"
     # ,dim_fill      = "rapid_wgt_0to12m"
-    ,dim_fill      = "wtclass_1y"
+    ,dim_fill       = "wtclass_1y"
     # ,dim_fill      = "wtg_velocity" # will produce error
   ) %>% 
   make_plot_1(
@@ -508,7 +509,6 @@ l_support$path_plot %>% jpeg::readJPEG() %>% grid::grid.raster()
 # it often makes sense to genrate a series of plot to be explored manually
 
 # GRAPH SERIES A
-
 outcomes_binary <- c(
      "atopy_1y"            # (Bin)  Atopy at 1y (by SPT - reaction to any allergen)
     ,"wz_recurrent_1y"     # (Bin)  Recurrent wheeze at 1y: 2+ episodes (ZL 06-2015)	Binary
@@ -522,8 +522,6 @@ outcomes_binary <- c(
     ,"rapid_wgt_0to12m"    # (Bin)  Change in WHO zwgt >0.67	Binary
     # ,"dzwgt_0to12m"        # (Num)  Weight gain velocity from 0 to 12m (change in WHO weight z-score)
   ) 
-
-
 # for each selected outcome create plot_1 in this folder
 path_target_series_A <- "./analysis/prep-plot-print/demo-2-series-A/" # where images will be printed
 ls_plot_series <- list() # to capture the collection of graphs and their file paths 
@@ -549,9 +547,7 @@ for(outcome_i in outcomes_binary){
 }
 saveRDS(ls_plot_series, paste0(path_target_series_A,"ls_plots.rds") )
 
-
 # ---- phase-5-serialize-1 ---------------------------------
-
 # GRAPH SERIES B
 # for each selected outcome create plot_1 in this folder
 path_target_series_B <- "./analysis/prep-plot-print/demo-2-series-B/" # where images will be printed
@@ -578,7 +574,6 @@ for(outcome_i in outcomes_binary){
 }
 saveRDS(ls_plot_series, paste0(path_target_series_B,"ls_plots.rds") )
 
-
 # ---- phase-6-place_plot ---------------------------------
 ls_plot_series <- readRDS("./analysis/prep-plot-print/demo-2-series-B/ls_plots.rds")
 ls_plot_series[["atopy_1y"]]$path_plot
@@ -588,9 +583,12 @@ ls_plot_series[["atopy_1y"]]$path_plot %>% jpeg::readJPEG() %>% grid::grid.raste
 # This chunk will publish the summative report
 path_publish_report_1 <- "./analysis/prep-plot-print/prep-plot-print.Rmd"
 path_publish_report_2 <- "./analysis/prep-plot-print/prep-plot-print_nofloat.Rmd"
-# path_publish_report_2 <- "./reports/*/report_2.Rmd"
+path_publish_report_3 <- "./analysis/prep-plot-print/prep-plot-print-00-applications.Rmd"
+
 allReports <- c(
-  path_publish_report_1,path_publish_report_2
+  path_publish_report_1, path_publish_report_2, path_publish_report_3
+  # path_publish_report_1
+  # path_publish_report_2
 ) # add more reports, in necessary
 pathFilesToBuild <- c(allReports) # line up report(s) to render
 testit::assert("The knitr Rmd files should exist.", base::file.exists(pathFilesToBuild))
@@ -605,27 +603,3 @@ for( pathFile in pathFilesToBuild ) {
                     ),
                     clean=TRUE)
 }
-
-
-
-
-# ---- save-to-disk --------------------- 
-# save the created and groomed dataset for further use by subsequent reports
-readr::write_csv(ds, path_save)
-ds %>% saveRDS( gsub(".csv$",".rds",path_save) )
-
-# phase 0 - build the plot
-# phase 1 - build the function
-# phase 2 - isolate the prep step
-# phase 3 - develop the print step
-# phase 4 - serialize application
-# phase 6 - place onto the canvas
-  
-# potential color picks
-# ,palette_custom = c("TRUE"="red", "FALSE"="white") # deep purple
-# ,palette_custom = c("TRUE"="#4B0092", "FALSE"="white") # deep purple
-# ,palette_custom = c("TRUE"="#0C7BDC", "FALSE"="#FFC20A") # blue, yellow
-# ,palette_custom = c("TRUE"="#D35FB7", "FALSE"="#FEFE62") # dar pink, light yellow
-# ,palette_custom = c("TRUE"="#40B0A6", "FALSE"="#E1BE6A") # light brown, teal
-# ,palette_custom = c("TRUE"="#4B0092", "FALSE"="#1AFF1A") # deep purple, acid green
-

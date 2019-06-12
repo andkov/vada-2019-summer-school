@@ -15,15 +15,22 @@ output:
 
 This document narrates the demonstration of the `(prep + plot + print) + place` technique using the data from VADA 2019 Summer School Data Challenge. See  [github.com/andkov/vada-2019-summer-school](https://github.com/andkov/vada-2019-summer-school) repository for reproducible scripts. 
 
-We will proceed in the following sequence of phases:
+A fully reproducible example of the same technique using publically available data from the Canadian Chronic Disease Surveillance System (CCDSS) is featured at [`github.com/dss-ialh/graph-making-scenarios`](https://github.com/dss-ialh/graph-making-scenarios/blob/master/README.md) (see Scenario 3).  
+
+The technique for reproducible graphing demonstrated here procedes in the following sequence of phases:
 
 - PHASE 0 - explore the data
-- PHASE 1 - build the plot
-- PHASE 2 - build the `plot` function
+- PHASE 1 - build the graph
+- PHASE 2 - compose `plot` function
 - PHASE 3 - split into `prep` and `plot` functions
 - PHASE 4 - add the `print` function
 - PHASE 5 - serialize graph production
-- PHASE 6 - how to `place` graphs onto the canvas
+- PHASE 6 - `place` graphs onto canvas
+
+## disclaimer
+
+ - This essay is more about making graphs than about analyzing data
+ - This essay is more about demonstrating a technique than about prescribing a framework.
 
 ## mindset
 
@@ -104,9 +111,7 @@ read_chunk("./analysis/prep-plot-print/prep-plot-print.R") #This allows knitr to
 ## inspect-1 summaries
 ```{r inspect-data-1, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
 ```
-## declare components
-```{r declare-components, echo=echo_chunks, results='show',warning=warning_chunks, message=message_chunks}
-```
+
 ## inspect-2 univariate
 ```{r inspect-data-2, echo=echo_chunks, results='asis',warning=warning_chunks, message=FALSE, fig.width=11, fig.height=12,out.width="960px"}
 ```
@@ -172,19 +177,13 @@ To remind us of the dimensions in typical formats:
 
 ```
 
-# concluding remarks
-
- - This essay is more about making graphs than about analyzing data
- - This essay is more about demonstrating a technique than about prescribing a framework.
- - Frameworks are like toothbrushes: everyone’s got them, but no-one wants to use anyone else’s. [source](https://twitter.com/trishgreenhalgh/status/891674763285942272)
-
 
 # future direction
 
 - Integrate the choice of transperancy into function arguments
 - Wrapper function to streamline looping through outcomes
 - Incorporate faceting (wrap, grid) into the function sequence
-- Automate the choice of pallete for any number of colors
+- Automate the choice of palette for any number of colors
 
 session information
 ===========================================================================

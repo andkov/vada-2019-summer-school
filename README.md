@@ -6,7 +6,6 @@ A repository to accompany selected applied sessions of the [2019 VADA Program Su
 
  - [technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique
 
-[greeter]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/0-greeter/0-greeter.html
 [demo_complete]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/prep-plot-print/prep-plot-print.html
 
 ## Techniques for Reproducible Visualisation in R: Graph as a Sequence of Three Functions.   
@@ -29,6 +28,27 @@ To prepare the environment for our sessions, please follow the "required" sectio
 The data science lead of BBMC is [Will Beasley](https://github.com/wibeasley), my old friend from graduate school, whose ideas about data visualization, reproducible research and applied analytics continue to shape my practice. We will operate in the framework he developed: [RAnalysisSkeleton](https://github.com/wibeasley/ranalysisskeleton), my starting point for any data science project. Our `2019-06-13` session will focus on applying this template to publish on GitHub the results of our `2019-06-12` session on reproducible graphing.   
 
 To prepare for the latter, please study the examples of _ggplot_ graphs Will has developed to illustrate this [textbook for introductory statistics](https://github.com/OuhscBbmc/DeSheaToothakerIntroStats/blob/master/thumbnails/thumbnails.md). Pay attention to the organization of the script in definition of _ggplot_ graphs. Specifically, notice typing conventions, the order of lines, and indentations. 
+
+
+# How to reproduce
+
+ 1. Clone the repo   
+ 2. Save the excel files as `.csv` into `./data-unshared/raw/` folder  
+ 3. Run the `./manipulation/0-greeter.R` which would save the data transfer project (dto) into `./data-unshared/derived/` 
+ 4. Select the file from `./analysis/prep-plot-print/` that corresponds to the objective you would like to focus on
+ 
+- `prep-plot-print-00-application.R` - demonstrates the application of the final sequence for graphing.
+- `prep-plot-print.R` - demonstrates how the tool was built, progressing through development phase by phase.  
+
+The technique for reproducible graphing demonstrated here procedes in the following sequence of phases:  
+
+- PHASE 0 - explore the data  
+- PHASE 1 - build the graph  
+- PHASE 2 - build the `plot` function  
+- PHASE 3 - split into `prep` and `plot` functions  
+- PHASE 4 - add the `print` function   
+- PHASE 5 - serialize graph production  
+- PHASE 6 - `place` graphs onto canvas  
 
 
 # Quick Links
