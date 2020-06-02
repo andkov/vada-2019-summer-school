@@ -5,8 +5,8 @@ A repository to accompany selected applied sessions of the [2019 VADA Program Su
 
 # Analytic Products
 
- - [technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique
-
+ - [technique demo][demo_complete] -  demonstrate a sequential development of a reproducible graphing system using `prep-plot-print` technique using the data from the VADA 2019 Summer School analytic project.  
+- [technique demo 2[(https://raw.githack.com/dss-ialh/graph-making-scenarios/master/analysis/scenario-3/scenario-3-ccdss.html) - the same approach demostrated using publically available data from the Canadian Chronic Disease Survaillance System (CCDSS).
 [demo_complete]:https://raw.githack.com/andkov/vada-2019-summer-school/master/analysis/prep-plot-print/prep-plot-print.html
 
 ## Techniques for Reproducible Visualisation in R: Graph as a Sequence of Three Functions.   
